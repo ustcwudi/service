@@ -1,0 +1,42 @@
+{
+  "description": "人员",
+  "fields": [
+    {
+      "name": "Name",
+      "type": "string",
+      "description": "姓名",
+      "search": "like"
+    },
+    {
+      "name": "School",
+      "type": "id",
+      "link": "School",
+      "description": "单位",
+      "search": "equal"
+    },
+    {
+      "name": "Clazz",
+      "type": "string",
+      "description": "班组",
+      "search": "like"
+    },
+    {
+      "name": "Code",
+      "type": "string",
+      "description": "证号",
+      "search": "like"
+    },
+    {
+      "name": "Sex",
+      "type": "bool",
+      "description": "性别",
+      "nullable": true
+    },
+    {
+      "name": "Remark",
+      "type": "string",
+      "description": "备注",
+      "search": "like"
+    }
+  ]
+}

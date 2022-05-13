@@ -1,0 +1,123 @@
+{
+  "description": "测试",
+  "fields": [
+    {
+      "name": "TestBool",
+      "type": "bool",
+      "description": "布尔",
+      "search": "equal",
+      "show": true
+    },
+    {
+      "name": "TestIdentity",
+      "type": "id",
+      "link": "User",
+      "description": "ID",
+      "search": "equal",
+      "show": true
+    },
+    {
+      "name": "TestIdentityList",
+      "type": "id[]",
+      "link": "Role",
+      "description": "ID列表",
+      "search": "equal",
+      "show": true
+    },
+    {
+      "name": "TestInt",
+      "type": "int",
+      "description": "整数",
+      "search": "equal",
+      "nullable": true,
+      "show": true,
+      "map": {
+        "未知": "0",
+        "男性": "1",
+        "女性": "2"
+      }
+    },
+    {
+      "name": "TestFloat",
+      "type": "float",
+      "description": "浮点",
+      "search": "equal",
+      "show": true
+    },
+    {
+      "name": "TestString",
+      "type": "string",
+      "description": "字符串",
+      "search": "equal",
+      "show": true
+    },
+    {
+      "name": "TestIntList",
+      "type": "int[]",
+      "description": "整数组",
+      "search": "equal",
+      "show": true,
+      "map": {
+        "未知": "0",
+        "男性": "1",
+        "女性": "2"
+      }
+    },
+    {
+      "name": "TestFloatList",
+      "type": "float[]",
+      "description": "浮点数组",
+      "search": "equal",
+      "show": true
+    },
+    {
+      "name": "TestStringList",
+      "type": "string[]",
+      "description": "字符串数组",
+      "search": "equal",
+      "show": true
+    },
+    {
+      "name": "TestIntMap",
+      "type": "map[string]int",
+      "description": "整数键值对",
+      "search": "equal",
+      "show": true
+    },
+    {
+      "name": "TestFloatMap",
+      "type": "map[string]float",
+      "description": "浮点键值对",
+      "search": "equal",
+      "show": true
+    },
+    {
+      "name": "TestStringMap",
+      "type": "map[string]string",
+      "description": "字符串键值对",
+      "search": "equal",
+      "show": true
+    },
+    {
+      "name": "TestIntArrayMap",
+      "type": "map[string]int[]",
+      "description": "整数组键值对",
+      "search": "equal",
+      "show": true
+    },
+    {
+      "name": "TestFloatArrayMap",
+      "type": "map[string]float[]",
+      "description": "浮点组键值对",
+      "search": "equal",
+      "show": true
+    },
+    {
+      "name": "TestStringArrayMap",
+      "type": "map[string]string[]",
+      "description": "字符串组键值对",
+      "search": "equal",
+      "show": true
+    }
+  ]
+}

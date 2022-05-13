@@ -1,0 +1,64 @@
+{
+  "description": "奖证模板",
+  "fields": [
+    {
+      "name": "Name",
+      "type": "string",
+      "description": "名称",
+      "search": "like"
+    },
+    {
+      "name": "School",
+      "type": "id",
+      "link": "School",
+      "description": "单位",
+      "search": "equal"
+    },
+    {
+      "name": "Content",
+      "type": "string",
+      "description": "内容"
+    },
+    {
+      "name": "Width",
+      "type": "float",
+      "description": "宽度"
+    },
+    {
+      "name": "Height",
+      "type": "float",
+      "description": "高度"
+    },
+    {
+      "name": "Background",
+      "type": "upload",
+      "description": "背景"
+    },
+    {
+      "name": "Signet",
+      "type": "upload",
+      "description": "印章"
+    },
+    {
+      "name": "SignetPositionX",
+      "type": "float",
+      "description": "印章位置X"
+    },
+    {
+      "name": "SignetPositionY",
+      "type": "float",
+      "description": "印章位置Y"
+    },
+    {
+      "name": "Parameter",
+      "type": "map[string]string",
+      "description": "参数"
+    },
+    {
+      "name": "Remark",
+      "type": "string",
+      "description": "备注",
+      "search": "like"
+    }
+  ]
+}

@@ -1,0 +1,93 @@
+{
+  "description": "用户",
+  "fields": [
+    {
+      "name": "Account",
+      "type": "string",
+      "description": "账号",
+      "search": "like",
+      "show": true
+    },
+    {
+      "name": "Password",
+      "type": "string",
+      "description": "密码"
+    },
+    {
+      "name": "Role",
+      "type": "id",
+      "link": "Role",
+      "description": "角色",
+      "nullable": true,
+      "show": true
+    },
+    {
+      "name": "Name",
+      "type": "string",
+      "description": "姓名",
+      "search": "like",
+      "show": true
+    },
+    {
+      "name": "Avatar",
+      "type": "upload",
+      "description": "头像",
+      "show": true
+    },
+    {
+      "name": "Phone",
+      "type": "string",
+      "description": "手机",
+      "search": "like",
+      "show": true
+    },
+    {
+      "name": "Email",
+      "type": "string",
+      "description": "邮箱",
+      "search": "like",
+      "show": true
+    },
+    {
+      "name": "Gender",
+      "type": "int",
+      "description": "性别",
+      "map": {
+        "未知": "0",
+        "男性": "1",
+        "女性": "2"
+      }
+    },
+    {
+      "name": "Country",
+      "type": "string",
+      "description": "国家"
+    },
+    {
+      "name": "Province",
+      "type": "string",
+      "description": "省"
+    },
+    {
+      "name": "City",
+      "type": "string",
+      "description": "市"
+    },
+    {
+      "name": "OpenIdentify",
+      "type": "string",
+      "description": "OpenID"
+    },
+    {
+      "name": "UnionIdentify",
+      "type": "string",
+      "description": "UnionID"
+    },
+    {
+      "name": "Enable",
+      "type": "bool",
+      "description": "状态",
+      "show": true
+    }
+  ]
+}

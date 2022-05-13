@@ -1,0 +1,27 @@
+{
+  "description": "切面",
+  "fields": [
+    {
+      "name": "Role",
+      "type": "id[]",
+      "link": "Role",
+      "description": "角色",
+      "search": "equal",
+      "show": true
+    },
+    {
+      "name": "Action",
+      "type": "string[]",
+      "description": "行为",
+      "search": "equal",
+      "show": true
+    },
+    {
+      "name": "Injection",
+      "type": "string[]",
+      "description": "注入",
+      "search": "equal",
+      "show": true
+    }
+  ]
+}

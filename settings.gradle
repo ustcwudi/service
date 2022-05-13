@@ -1,0 +1,5 @@
+rootProject.name = 'service'
+include 'core'
+include 'blank'
+include 'award'
+include 'generator'

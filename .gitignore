@@ -1,0 +1,7 @@
+.gradle
+.idea
+.DS_Store
+.vscode
+bin
+build
+core/src/main/java/edu/hubu/auto
