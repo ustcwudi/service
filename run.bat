@@ -11,7 +11,7 @@ if "%1" == "java" (
 )
 if "%1" == "web" (
     cd web
-    tyarn dev
+    tyarn start
     cd ..
 )
 if "%1" == "build" (

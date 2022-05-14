@@ -115,7 +115,7 @@ public class Generator {
                     out = new BufferedWriter(
                             new OutputStreamWriter(new FileOutputStream(docFile), StandardCharsets.UTF_8));
                     template.process(map, out);
-                    String jsDir = "../web/src/pages/auto/" + new UnderScoreCaseMethod().exec(modelName);
+                    String jsDir = "../web/src/pages/admin/" + new UnderScoreCaseMethod().exec(modelName);
                     new File(jsDir).mkdir();
                     template = configuration.getTemplate("js/index.ftl", "UTF-8");
                     docFile = new File(jsDir + "/index.d.ts");
@@ -123,25 +123,19 @@ public class Generator {
                             new OutputStreamWriter(new FileOutputStream(docFile), StandardCharsets.UTF_8));
                     template.process(map, out);
                     template = configuration.getTemplate("js/table.ftl", "UTF-8");
-                    docFile = new File(jsDir + "/table.vue");
-                    out = new BufferedWriter(
-                            new OutputStreamWriter(new FileOutputStream(docFile), StandardCharsets.UTF_8));
+                    docFile = new File(jsDir + "/table.tsx");
+                    out = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(docFile),
+                            StandardCharsets.UTF_8));
                     template.process(map, out);
                     template = configuration.getTemplate("js/columns.ftl", "UTF-8");
-                    docFile = new File(jsDir + "/columns.ts");
-                    out = new BufferedWriter(
-                            new OutputStreamWriter(new FileOutputStream(docFile), StandardCharsets.UTF_8));
+                    docFile = new File(jsDir + "/columns.tsx");
+                    out = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(docFile),
+                            StandardCharsets.UTF_8));
                     template.process(map, out);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
             });
-            Template template = configuration.getTemplate("js/router.ftl", "UTF-8");
-            File docFile = new File("../web/src/router.ts");
-            Writer out = new BufferedWriter(
-                    new OutputStreamWriter(new FileOutputStream(docFile), StandardCharsets.UTF_8));
-            map.put("models", modelMap);
-            template.process(map, out);
         } catch (Exception e) {
             e.printStackTrace();
         }
