@@ -10,9 +10,11 @@ export const tableColumns = function (): TableColumn<${model.name}>[] {
       title: '${field.description}',
       key: '${c(field.name)}',
       <#if field.type == "id[]" && field.link??>
-      render: (props) => <>{props.${c(field.name)}Data?.map((i) => i.name)}</>,
+      render: (props) => <>{props.value.${c(field.name)}Data?.map((i) => i.name)}</>,
       <#elseif field.type == "id" && field.link??>
-      render: (props) => <>{props.${c(field.name)}Data?.name}</>,
+      render: (props) => <>{props.value.${c(field.name)}Data?.name}</>,
+      <#else>
+      render: (props) => <>{props.value.${c(field.name)}}</>,
       </#if>
     },
 </#list>

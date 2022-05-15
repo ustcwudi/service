@@ -1,10 +1,8 @@
 import TableSortLabel from '@mui/material/TableSortLabel'
 import TableHead from '@mui/material/TableHead'
-import { visuallyHidden } from '@mui/utils'
 import TableRow from '@mui/material/TableRow'
 import TableCell from '@mui/material/TableCell'
 import Checkbox from '@mui/material/Checkbox'
-import Box from '@mui/material/Box'
 import { Model, TableColumn } from '@/pages/admin'
 
 type Order = 'asc' | 'desc'
@@ -35,14 +33,10 @@ export default <T extends Model>(props: HeadProps<T>) => {
           <TableCell key={column.key as string} align="right" padding="normal" sortDirection={orderBy === column.key ? order : false}>
             <TableSortLabel active={orderBy === column.key} direction={orderBy === column.key ? order : 'asc'} onClick={createSortHandler(column.key)}>
               {column.title}
-              {orderBy === column.key ? (
-                <Box component="span" sx={visuallyHidden}>
-                  {order === 'desc' ? 'sorted descending' : 'sorted ascending'}
-                </Box>
-              ) : null}
             </TableSortLabel>
           </TableCell>
         ))}
+        <TableCell></TableCell>
       </TableRow>
     </TableHead>
   )

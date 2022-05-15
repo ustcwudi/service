@@ -14,7 +14,7 @@ export interface MenuItem {
 export interface TableColumn<T> {
   key: keyof T
   title: string
-  render?: React.FunctionComponent<React.PropsWithChildren<T>>
+  render: React.FunctionComponent<React.PropsWithChildren<{ value: T }>>
 }
 
 // 表单列属性

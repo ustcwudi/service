@@ -6,12 +6,11 @@ import TextField from '@mui/material/TextField'
 import Tabs from '@mui/material/Tabs'
 import Tab from '@mui/material/Tab'
 import Captcha from '@/components/captcha'
-import FormControlLabel from '@mui/material/FormControlLabel'
-import Checkbox from '@mui/material/Checkbox'
-import Link from '@mui/material/Link'
 
 export default () => {
-  const [value, setValue] = React.useState(0)
+  const [tab, setTab] = React.useState(0)
+  const [form, setForm] = React.useState({})
+  const [id, setId] = React.useState('')
   return (
     <Box
       sx={{
@@ -20,13 +19,13 @@ export default () => {
         margin: '10px auto',
       }}
     >
-      <Tabs value={value} centered sx={{ mb: 3 }}>
+      <Tabs value={tab} centered sx={{ mb: 3 }}>
         <Tab label="找回密码" />
         <Tab label="返回登录" />
       </Tabs>
       <TextField fullWidth label="账号" sx={{ mb: 3 }} />
       <TextField fullWidth label="邮箱" sx={{ mb: 3 }} />
-      <Captcha />
+      <Captcha onChange={(e) => setForm({ ...form, captcha: `${id}:${e.target.value}` })} onUpdate={setId} />
       <Button sx={{ width: '100%', mt: 3 }} size="large" variant="contained" endIcon={<SendIcon />}>
         找回密码
       </Button>
