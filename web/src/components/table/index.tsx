@@ -6,7 +6,6 @@ import Table from '@mui/material/Table'
 import TableBody from '@mui/material/TableBody'
 import TableCell from '@mui/material/TableCell'
 import TableContainer from '@mui/material/TableContainer'
-import TablePagination from '@mui/material/TablePagination'
 import Pagination from '@mui/material/Pagination'
 import EditIcon from '@mui/icons-material/Edit'
 import VisibilityIcon from '@mui/icons-material/Visibility'
@@ -19,23 +18,16 @@ import { TableColumn, Model } from '../../pages/admin/index'
 import request from 'umi-request'
 import { useRequest } from 'ahooks'
 
-type Order = 'asc' | 'desc'
-
 export default <T extends Model>(props: { columns: TableColumn<T>[] }) => {
-  const [order, setOrder] = React.useState<Order>('asc')
-  const [orderBy, setOrderBy] = React.useState<keyof T>('createTime')
   const [selected, setSelected] = React.useState<readonly string[]>([])
   const [pagination, setPagination] = React.useState({ page: 1, pageSize: 10 })
+  const [order, setOrder] = React.useState<{ key: keyof T; direction: 'asc' | 'desc' }>({ key: 'createTime', direction: 'asc' })
 
-  const queryRequest = useRequest(() => request.post(`/api/user/query/${pagination.page}/${pagination.pageSize}`, { data: {}, headers: { link: 'school,role' } }), { refreshDeps: [pagination] })
+  const queryRequest = useRequest(() => request.post(`/api/user/query/${order.key}/${order.direction}/${pagination.page}/${pagination.pageSize}`, { data: {}, headers: { link: 'school,role' } }), {
+    refreshDeps: [pagination, order],
+  })
 
   const countRequest = useRequest(() => request.post('/api/user/count', { data: {} }))
-
-  const handleRequestSort = (event: React.MouseEvent<unknown>, property: keyof T) => {
-    const isAsc = orderBy === property && order === 'asc'
-    setOrder(isAsc ? 'desc' : 'asc')
-    setOrderBy(property)
-  }
 
   const checkChange = (check: boolean, id?: string) => {
     if (id) {
@@ -50,20 +42,35 @@ export default <T extends Model>(props: { columns: TableColumn<T>[] }) => {
 
   const isSelected = (id?: string) => (id ? selected.indexOf(id) !== -1 : false)
 
+  const onCommand = (type: string, paramter?: any) => {
+    switch (type) {
+      case 'unselect':
+        setSelected([])
+        break
+      case 'selectAll':
+        let checked = paramter as boolean
+        checked ? setSelected(queryRequest.data?.data?.map((row: T) => row.id)) : setSelected([])
+        break
+      case 'sort':
+        let key = paramter as keyof T
+        const isAsc = order.key === key && order.direction === 'asc'
+        setOrder({ key: key, direction: isAsc ? 'desc' : 'asc' })
+        break
+    }
+  }
+
   return (
     <Paper>
-      <Toolbar numSelected={selected.length} />
+      <Toolbar totalSelected={selected.length} onCommand={onCommand} />
       <TableContainer>
         <Table sx={{ minWidth: 1200 }}>
           {/* 表头 */}
           <Head
             columns={props.columns}
-            numSelected={selected.length}
             order={order}
-            orderBy={orderBy}
-            onSelectAllClick={(e) => (e.target.checked ? setSelected(queryRequest.data?.data?.map((row: T) => row.id)) : setSelected([]))}
-            onRequestSort={handleRequestSort}
-            rowCount={countRequest?.data?.data}
+            onCommand={onCommand}
+            currentSelected={queryRequest.data?.data?.length ? queryRequest.data.data.map((row: T) => (isSelected(row.id) ? 1 : 0)).reduce((pre: number, cur: number) => pre + cur) : 0}
+            currentSize={queryRequest.data?.data?.length ? queryRequest.data.data.length : 0}
           />
           {/* 表格 */}
           <TableBody>

@@ -1,7 +1,9 @@
 import Nav from '@/components/nav'
 import Menu from '@/components/menu'
+import { useModel } from 'umi'
 
 export default (props: { children: any }) => {
+  const { user } = useModel('user', (model) => ({ user: model.user }))
   return (
     <>
       <Nav />

@@ -33,8 +33,9 @@ public class Controller<T extends Model, Q extends QueryRequest> {
 
     @GetMapping("/id/{id}")
     @ApiOperation("根据ID获取")
-    public Result get(@ApiIgnore Token token, @PathVariable String id, @RequestHeader(value = "link", required = false) String link) {
-        String[] links = link == null ? new String[]{} : link.split(",");
+    public Result get(@ApiIgnore Token token, @PathVariable String id,
+            @RequestHeader(value = "link", required = false) String link) {
+        String[] links = link == null ? new String[] {} : link.split(",");
         return Result.ok(mongoDao.findOne(id, links));
     }
 
@@ -64,26 +65,31 @@ public class Controller<T extends Model, Q extends QueryRequest> {
 
     @PostMapping("/query")
     @ApiOperation("查询")
-    public Result query(@ApiIgnore Token token, @RequestBody Q q, @RequestHeader(value = "link", required = false) String link) {
-        String[] links = link == null ? new String[]{} : link.split(",");
+    public Result query(@ApiIgnore Token token, @RequestBody Q q,
+            @RequestHeader(value = "link", required = false) String link) {
+        String[] links = link == null ? new String[] {} : link.split(",");
         return Result.ok(mongoDao.find(q, links));
     }
 
     @PostMapping("query/{page}/{pageSize}")
     @ApiOperation("分页查询")
-    public Result query(@ApiIgnore Token token, @RequestBody Q q, @RequestHeader(value = "link", required = false) String link, @PathVariable int page, @PathVariable int pageSize) {
+    public Result query(@ApiIgnore Token token, @RequestBody Q q,
+            @RequestHeader(value = "link", required = false) String link, @PathVariable int page,
+            @PathVariable int pageSize) {
         page = page < 0 ? 0 : page;
         pageSize = pageSize < 1 || pageSize > 100 ? defaultPageSize : pageSize;
-        String[] links = link == null ? new String[]{} : link.split(",");
+        String[] links = link == null ? new String[] {} : link.split(",");
         return Result.ok(mongoDao.find(q, links, page, pageSize));
     }
 
-    @PostMapping("query/{sort}/{direction}/{pageSize}/{page}")
+    @PostMapping("query/{sort}/{direction}/{page}/{pageSize}")
     @ApiOperation("分页排序查询")
-    public Result query(@ApiIgnore Token token, @RequestBody Q q, @RequestHeader(value = "link", required = false) String link, @PathVariable int page, @PathVariable int pageSize, @PathVariable String sort, @PathVariable String direction) {
+    public Result query(@ApiIgnore Token token, @RequestBody Q q,
+            @RequestHeader(value = "link", required = false) String link, @PathVariable int page,
+            @PathVariable int pageSize, @PathVariable String sort, @PathVariable String direction) {
         page = page < 0 ? 0 : page;
         pageSize = pageSize < 1 || pageSize > 100 ? defaultPageSize : pageSize;
-        String[] links = link == null ? new String[]{} : link.split(",");
+        String[] links = link == null ? new String[] {} : link.split(",");
         return Result.ok(mongoDao.find(q, links, page, pageSize, sort, direction.equals("asc")));
     }
 

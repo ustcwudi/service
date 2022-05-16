@@ -11,14 +11,20 @@ import Checkbox from '@mui/material/Checkbox'
 import Link from '@mui/material/Link'
 import request from 'umi-request'
 import { useRequest } from 'ahooks'
+import { useModel, history } from 'umi'
 
 export default () => {
   const [tab, setTab] = React.useState(0)
   const [form, setForm] = React.useState({})
   const [id, setId] = React.useState('')
 
+  const { user, login } = useModel('user', (model) => ({ user: model.user, login: model.login }))
+
   const { data, loading, run } = useRequest(() => request.post('/api/user/login', { data: form }), {
-    onSuccess: (data) => {},
+    onSuccess: (data) => {
+      login(data.data)
+      history.push('/admin/user/table')
+    },
     manual: true,
   })
 

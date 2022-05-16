@@ -4,36 +4,42 @@ import IconButton from '@mui/material/IconButton'
 import Tooltip from '@mui/material/Tooltip'
 import DeleteIcon from '@mui/icons-material/Delete'
 import FilterListIcon from '@mui/icons-material/FilterList'
+import CancelIcon from '@mui/icons-material/Cancel'
 import { alpha } from '@mui/material/styles'
 
-export default (props: { numSelected: number }) => {
-  const { numSelected } = props
+export default (props: { totalSelected: number; onCommand: (type: string, parameter?: any) => void }) => {
+  const { totalSelected } = props
 
   return (
     <Toolbar
       sx={{
-        pl: { sm: 2 },
-        pr: { xs: 1, sm: 1 },
-        ...(numSelected > 0 && {
+        ...(totalSelected > 0 && {
           bgcolor: (theme) => alpha(theme.palette.primary.main, theme.palette.action.activatedOpacity),
         }),
       }}
     >
-      {numSelected > 0 ? (
+      {totalSelected > 0 ? (
         <Typography sx={{ flex: '1 1 100%' }} color="inherit" variant="subtitle1" component="div">
-          选中 {numSelected} 项
+          选中 {totalSelected} 项
         </Typography>
       ) : (
-        <Typography sx={{ flex: '1 1 100%' }} variant="h6" id="tableTitle" component="div">
+        <Typography sx={{ flex: '1 1 100%' }} variant="h6" component="div">
           表格
         </Typography>
       )}
-      {numSelected > 0 ? (
-        <Tooltip title="删除">
-          <IconButton>
-            <DeleteIcon />
-          </IconButton>
-        </Tooltip>
+      {totalSelected > 0 ? (
+        <>
+          <Tooltip title="取消选择">
+            <IconButton onClick={() => props.onCommand('unselect')}>
+              <CancelIcon />
+            </IconButton>
+          </Tooltip>
+          <Tooltip title="删除">
+            <IconButton>
+              <DeleteIcon />
+            </IconButton>
+          </Tooltip>
+        </>
       ) : (
         <Tooltip title="筛选">
           <IconButton>

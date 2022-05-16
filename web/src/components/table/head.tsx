@@ -5,33 +5,31 @@ import TableCell from '@mui/material/TableCell'
 import Checkbox from '@mui/material/Checkbox'
 import { Model, TableColumn } from '@/pages/admin'
 
-type Order = 'asc' | 'desc'
-
-interface HeadProps<T> {
-  numSelected: number
-  onRequestSort: (event: React.MouseEvent<unknown>, property: keyof T) => void
-  onSelectAllClick: (event: React.ChangeEvent<HTMLInputElement>) => void
-  order: Order
-  orderBy: keyof T
-  rowCount: number
+interface Props<T> {
+  currentSelected: number
+  currentSize: number
+  onCommand: (type: string, parameter?: any) => void
+  order: { key: keyof T; direction: 'asc' | 'desc' }
   columns: TableColumn<T>[]
 }
 
-export default <T extends Model>(props: HeadProps<T>) => {
-  const { onSelectAllClick, order, orderBy, numSelected, rowCount, columns, onRequestSort } = props
-  const createSortHandler = (property: keyof T) => (event: React.MouseEvent<unknown>) => {
-    onRequestSort(event, property)
-  }
+export default <T extends Model>(props: Props<T>) => {
+  const { onCommand, order, currentSelected, currentSize, columns } = props
 
   return (
     <TableHead>
       <TableRow>
         <TableCell padding="checkbox">
-          <Checkbox color="primary" indeterminate={numSelected > 0 && numSelected < rowCount} checked={rowCount > 0 && numSelected === rowCount} onChange={onSelectAllClick} />
+          <Checkbox
+            color="primary"
+            indeterminate={currentSelected > 0 && currentSelected < currentSize}
+            checked={currentSelected > 0 && currentSelected === currentSize}
+            onChange={(e) => onCommand('selectAll', e.target.checked)}
+          />
         </TableCell>
         {columns.map((column) => (
-          <TableCell key={column.key as string} align="right" padding="normal" sortDirection={orderBy === column.key ? order : false}>
-            <TableSortLabel active={orderBy === column.key} direction={orderBy === column.key ? order : 'asc'} onClick={createSortHandler(column.key)}>
+          <TableCell key={column.key as string} align="right" padding="normal" sortDirection={order.key === column.key ? order.direction : false}>
+            <TableSortLabel active={order.key === column.key} direction={order.key === column.key ? order.direction : 'asc'} onClick={() => onCommand('sort', column.key)}>
               {column.title}
             </TableSortLabel>
           </TableCell>
