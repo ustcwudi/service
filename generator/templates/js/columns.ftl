@@ -2,6 +2,10 @@
 import type { ${model.name}, ${model.name}Query } from './'
 import type { TableColumn, FormColumn } from '../'
 import TextField from '@mui/material/TextField'
+import NumberInput from '@/components/input/number'
+import StringInput from '@/components/input/string'
+import NumberArray from '@/components/input/number_array'
+import StringArray from '@/components/input/string_array'
 import IdSelect from '@/components/input/id_select'
 import IdsSelect from '@/components/input/ids_select'
 import FormControlLabel from '@mui/material/FormControlLabel'
@@ -49,6 +53,72 @@ export const formColumns = function (): FormColumn<${model.name}>[] {
       render: (props) => <IdsSelect fullWidth table="${c(field.link)}" label="${field.description}" onChange={(v) => (props.value.${c(field.name)} = v.map((i) => i.id as string))} defaultValue={props.defaultValue?.${c(field.name)}Data}></IdsSelect>,
 <#elseif field.type == "bool">
       render: (props) => <FormControlLabel labelPlacement="start" defaultChecked={props.defaultValue?.${c(field.name)}} control={<Switch onChange={(e) => (props.value.${c(field.name)} = e.target.checked)} />} label="${field.description}" />,
+<#elseif field.type == "int" || field.type == "float">
+      render: (props) => (
+        <NumberInput
+          type="${field.type}"
+<#if field.map??>
+          map={[
+<#list field.map?keys as key>
+            { label: '${key}', value: ${field.map["${key}"]} },
+</#list>
+          ]}
+</#if>
+          fullWidth
+          label="${field.description}"
+          onChange={(v) => (props.value.${c(field.name)} = v)}
+          defaultValue={props.defaultValue?.${c(field.name)}}
+        />
+      ),
+<#elseif field.type == "int[]" || field.type == "float[]">
+      render: (props) => (
+        <NumberArray
+          type="${field.type}"
+<#if field.map??>
+          map={[
+<#list field.map?keys as key>
+            { label: '${key}', value: ${field.map["${key}"]} },
+</#list>
+          ]}
+</#if>
+          fullWidth
+          label="${field.description}"
+          onChange={(v) => (props.value.${c(field.name)} = v)}
+          defaultValue={props.defaultValue?.${c(field.name)}}
+        />
+      ),
+<#elseif field.type == "string">
+      render: (props) => (
+        <StringInput
+<#if field.map??>
+          map={[
+<#list field.map?keys as key>
+            { label: '${key}', value: '${field.map["${key}"]}' },
+</#list>
+          ]}
+</#if>
+          fullWidth
+          label="${field.description}"
+          onChange={(v) => (props.value.${c(field.name)} = v)}
+          defaultValue={props.defaultValue?.${c(field.name)}}
+        />
+      ),
+<#elseif field.type == "string[]">
+      render: (props) => (
+        <StringArray
+<#if field.map??>
+          map={[
+<#list field.map?keys as key>
+            { label: '${key}', value: '${field.map["${key}"]}' },
+</#list>
+          ]}
+</#if>
+          fullWidth
+          label="${field.description}"
+          onChange={(v) => (props.value.${c(field.name)} = v)}
+          defaultValue={props.defaultValue?.${c(field.name)}}
+        />
+      ),
 <#else>
       render: (props) => <TextField fullWidth label="${field.description}" onChange={(e) => (props.value.${c(field.name)} = e.target.value)} defaultValue={props.defaultValue?.${c(field.name)}}></TextField>,
 </#if>
