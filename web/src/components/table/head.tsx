@@ -28,7 +28,7 @@ export default <T extends Model>(props: Props<T>) => {
           />
         </TableCell>
         {columns.map((column) => (
-          <TableCell key={column.key as string} align="right" padding="normal" sortDirection={order.key === column.key ? order.direction : false}>
+          <TableCell key={column.key as string} align="left" padding="normal" sortDirection={order.key === column.key ? order.direction : false}>
             <TableSortLabel active={order.key === column.key} direction={order.key === column.key ? order.direction : 'asc'} onClick={() => onCommand('sort', column.key)}>
               {column.title}
             </TableSortLabel>

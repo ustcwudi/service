@@ -5,6 +5,7 @@ import Tooltip from '@mui/material/Tooltip'
 import DeleteIcon from '@mui/icons-material/Delete'
 import FilterListIcon from '@mui/icons-material/FilterList'
 import CancelIcon from '@mui/icons-material/Cancel'
+import AddIcon from '@mui/icons-material/Add'
 import { alpha } from '@mui/material/styles'
 
 export default (props: { totalSelected: number; onCommand: (type: string, parameter?: any) => void }) => {
@@ -30,7 +31,7 @@ export default (props: { totalSelected: number; onCommand: (type: string, parame
       {totalSelected > 0 ? (
         <>
           <Tooltip title="取消选择">
-            <IconButton onClick={() => props.onCommand('unselect')}>
+            <IconButton onClick={() => props.onCommand('unselectAll')}>
               <CancelIcon />
             </IconButton>
           </Tooltip>
@@ -41,11 +42,18 @@ export default (props: { totalSelected: number; onCommand: (type: string, parame
           </Tooltip>
         </>
       ) : (
-        <Tooltip title="筛选">
-          <IconButton>
-            <FilterListIcon />
-          </IconButton>
-        </Tooltip>
+        <>
+          <Tooltip title="筛选">
+            <IconButton onClick={() => props.onCommand('query')}>
+              <FilterListIcon />
+            </IconButton>
+          </Tooltip>
+          <Tooltip title="新增">
+            <IconButton onClick={() => props.onCommand('add')}>
+              <AddIcon />
+            </IconButton>
+          </Tooltip>
+        </>
       )}
     </Toolbar>
   )

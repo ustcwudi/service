@@ -2,6 +2,10 @@
 import type { ${model.name}, ${model.name}Query } from './'
 import type { TableColumn, FormColumn } from '../'
 import TextField from '@mui/material/TextField'
+import IdSelect from '@/components/input/id_select'
+import IdsSelect from '@/components/input/ids_select'
+import FormControlLabel from '@mui/material/FormControlLabel'
+import Switch from '@mui/material/Switch'
 
 export const tableColumns = function (): TableColumn<${model.name}>[] {
   return [
@@ -27,7 +31,7 @@ export const queryColumns = function (): FormColumn<${model.name}Query>[] {
     {
       title: '${field.description}',
       key: '${c(field.name)}',
-      render: (props) => <TextField></TextField>,
+      render: (props) => <TextField fullWidth label="${field.description}" onChange={(e) => (props.value.${c(field.name)} = e.target.value)} defaultValue={props.defaultValue?.${c(field.name)}}></TextField>,
     },
 </#if></#list>
   ]
@@ -39,7 +43,15 @@ export const formColumns = function (): FormColumn<${model.name}>[] {
     {
       title: '${field.description}',
       key: '${c(field.name)}',
-      render: (props) => <TextField></TextField>,
+<#if field.type == "id" && field.link??>
+      render: (props) => <IdSelect fullWidth table="${c(field.link)}" label="${field.description}" onChange={(v) => (props.value.${c(field.name)} = v && v.id ? v.id : null)} defaultValue={props.defaultValue?.${c(field.name)}Data}></IdSelect>,
+<#elseif field.type == "id[]" && field.link??>
+      render: (props) => <IdsSelect fullWidth table="${c(field.link)}" label="${field.description}" onChange={(v) => (props.value.${c(field.name)} = v.map((i) => i.id as string))} defaultValue={props.defaultValue?.${c(field.name)}Data}></IdsSelect>,
+<#elseif field.type == "bool">
+      render: (props) => <FormControlLabel labelPlacement="start" defaultChecked={props.defaultValue?.${c(field.name)}} control={<Switch onChange={(e) => (props.value.${c(field.name)} = e.target.checked)} />} label="${field.description}" />,
+<#else>
+      render: (props) => <TextField fullWidth label="${field.description}" onChange={(e) => (props.value.${c(field.name)} = e.target.value)} defaultValue={props.defaultValue?.${c(field.name)}}></TextField>,
+</#if>
     },
 </#if></#list>
   ]
