@@ -6,6 +6,8 @@ import NumberInput from '@/components/input/number'
 import StringInput from '@/components/input/string'
 import NumberArray from '@/components/input/number_array'
 import StringArray from '@/components/input/string_array'
+import StringMap from '@/components/input/string_map'
+import NumberMap from '@/components/input/number_map'
 import IdSelect from '@/components/input/id_select'
 import IdsSelect from '@/components/input/ids_select'
 import FormControlLabel from '@mui/material/FormControlLabel'
@@ -87,6 +89,16 @@ export const formColumns = function (): FormColumn<${model.name}>[] {
           defaultValue={props.defaultValue?.${c(field.name)}}
         />
       ),
+<#elseif field.type == "map[string]int" || field.type == "map[string]float">
+      render: (props) => (
+        <NumberMap
+          type="${field.type}"
+          fullWidth
+          label="${field.description}"
+          onChange={(v) => (props.value.${c(field.name)} = v)}
+          defaultValue={props.defaultValue?.${c(field.name)}}
+        />
+      ),
 <#elseif field.type == "string">
       render: (props) => (
         <StringInput
@@ -113,6 +125,15 @@ export const formColumns = function (): FormColumn<${model.name}>[] {
 </#list>
           ]}
 </#if>
+          fullWidth
+          label="${field.description}"
+          onChange={(v) => (props.value.${c(field.name)} = v)}
+          defaultValue={props.defaultValue?.${c(field.name)}}
+        />
+      ),
+<#elseif field.type == "map[string]string">
+      render: (props) => (
+        <StringMap
           fullWidth
           label="${field.description}"
           onChange={(v) => (props.value.${c(field.name)} = v)}
