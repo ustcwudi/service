@@ -31,6 +31,7 @@ interface Props<T, Q> {
   formColumns: FormColumn<T>[]
   table: string
   link: string
+  title: string
 }
 
 export default <T extends Model, Q extends QueryModel>(props: Props<T, Q>) => {
@@ -174,7 +175,7 @@ export default <T extends Model, Q extends QueryModel>(props: Props<T, Q>) => {
 
   return (
     <Paper>
-      <Toolbar garbage={garbage} query={query} totalSelected={selected.length} onCommand={onCommand} />
+      <Toolbar title={props.title} garbage={garbage} query={query} totalSelected={selected.length} onCommand={onCommand} />
       <TableContainer>
         <Table sx={{ minWidth: 1200 }}>
           {/* 表头 */}

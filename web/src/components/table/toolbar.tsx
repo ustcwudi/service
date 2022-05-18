@@ -14,6 +14,7 @@ import AddIcon from '@mui/icons-material/Add'
 import { alpha } from '@mui/material/styles'
 
 interface Props {
+  title: string
   totalSelected: number
   query: Record<string, any>
   onCommand: (type: string, parameter?: any) => void
@@ -36,7 +37,7 @@ export default (props: Props) => {
         </Typography>
       ) : (
         <Typography sx={{ flex: '1 1 100%' }} variant="h6" component="div">
-          表格
+          {props.title + (props.garbage ? '回收站' : '')}
         </Typography>
       )}
       {totalSelected > 0 ? (

@@ -30,5 +30,5 @@ let empty: () => ${model.name} = () => {
 }
 
 export default () => {
-  return <DataTable emptyModel={empty} tableColumns={tableColumns()} queryColumns={queryColumns()} formColumns={formColumns()} table="${c(model.name)}" link="<#list model.fields as field><#if field.link??>${c(field.name)},</#if></#list>"></DataTable>
+  return <DataTable title="${model.description}" emptyModel={empty} tableColumns={tableColumns()} queryColumns={queryColumns()} formColumns={formColumns()} table="${c(model.name)}" link="<#list model.fields as field><#if field.link??>${c(field.name)},</#if></#list>"></DataTable>
 }
