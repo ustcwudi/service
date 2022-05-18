@@ -1,5 +1,7 @@
 package edu.hubu.auto.controller;
 
+import java.util.List;
+
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -71,6 +73,7 @@ public class ${model.name}Controller extends Controller<${model.name}, ${model.n
     @ApiOperation("获取")
     public Result get(
             @ApiIgnore Token token,
+            @RequestParam(required = false) String id,
             <#list model.fields as field><#assign type = qt(field.type, field.search)><#if type == "String" || type == "Float" || type == "Integer" >
             @RequestParam(required = false) ${type} ${c(field.name)},
             </#if></#list>
@@ -79,6 +82,8 @@ public class ${model.name}Controller extends Controller<${model.name}, ${model.n
             @RequestParam(required = false) String link
     ) {
         ${model.name}Query query = new ${model.name}Query();
+        if (id != null)
+            query.setId(List.of(id.split(",")));
         <#list model.fields as field><#assign type = qt(field.type, field.search)><#if type == "String" || type == "Float" || type == "Integer">
         if (${c(field.name)} != null)
             query.set${field.name}(${c(field.name)});

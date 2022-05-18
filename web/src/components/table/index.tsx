@@ -38,13 +38,14 @@ export default <T extends Model, Q extends QueryModel>(props: Props<T, Q>) => {
   const [pagination, setPagination] = React.useState({ page: 1, pageSize: 10 })
   const [candidate, setCandidate] = React.useState<T>({} as T)
   const [current, setCurrent] = React.useState<T | undefined>(undefined)
-  const [query, setQuery] = React.useState<Q | undefined>(undefined)
+  const [currentQuery, setCurrentQuery] = React.useState<Q | undefined>(undefined)
+  const [query, setQuery] = React.useState<Q>({} as Q)
   const [order, setOrder] = React.useState<{ key: keyof T; direction: 'asc' | 'desc' }>({ key: 'createTime', direction: 'asc' })
 
   const queryRequest = useRequest(
-    () => request.post(`/api/${props.table}/query/${order.key}/${order.direction}/${pagination.page}/${pagination.pageSize}`, { data: {}, headers: { link: props.link } }),
+    () => request.post(`/api/${props.table}/query/${order.key}/${order.direction}/${pagination.page}/${pagination.pageSize}`, { data: query, headers: { link: props.link } }),
     {
-      refreshDeps: [pagination, order],
+      refreshDeps: [pagination, order, query],
     },
   )
 
@@ -82,6 +83,9 @@ export default <T extends Model, Q extends QueryModel>(props: Props<T, Q>) => {
         setCurrent(props.emptyModel())
         break
       case 'query':
+        setCurrentQuery(query)
+        break
+      case 'unquery':
         setQuery({} as Q)
         break
     }
@@ -89,7 +93,7 @@ export default <T extends Model, Q extends QueryModel>(props: Props<T, Q>) => {
 
   return (
     <Paper>
-      <Toolbar totalSelected={selected.length} onCommand={onCommand} />
+      <Toolbar query={query} totalSelected={selected.length} onCommand={onCommand} />
       <TableContainer>
         <Table sx={{ minWidth: 1200 }}>
           {/* 表头 */}
@@ -175,20 +179,28 @@ export default <T extends Model, Q extends QueryModel>(props: Props<T, Q>) => {
           </Button>
         </DialogActions>
       </Dialog>
-      <Dialog open={query !== undefined} maxWidth="lg" onClose={() => setQuery(undefined)}>
+      <Dialog open={currentQuery !== undefined} maxWidth="lg" onClose={() => setCurrentQuery(undefined)}>
         <DialogTitle>搜索</DialogTitle>
         <DialogContent>
           <Grid container spacing={2} sx={{ mt: 0.5 }}>
             {props.queryColumns.map((c) => (
               <Grid key={c.key as string} item xs={4}>
-                <c.render value={{} as Q} defaultValue={query}></c.render>
+                <c.render value={query} defaultValue={currentQuery}></c.render>
               </Grid>
             ))}
           </Grid>
         </DialogContent>
         <DialogActions>
-          <Button onClick={() => setQuery(undefined)}>取消</Button>
-          <Button onClick={() => setQuery(undefined)}>搜索</Button>
+          <Button onClick={() => setCurrentQuery(undefined)}>取消</Button>
+          <Button
+            onClick={() => {
+              console.log(query)
+              queryRequest.run()
+              setCurrentQuery(undefined)
+            }}
+          >
+            搜索
+          </Button>
         </DialogActions>
       </Dialog>
     </Paper>

@@ -12,7 +12,7 @@ import TextField from '@mui/material/TextField'
 interface Props {
   fullWidth: boolean
   label: string
-  type: 'int[]' | 'float[]'
+  type: 'int' | 'float'
   defaultValue?: number[]
   map?: { label: string; value: number }[]
   onChange: (value: number[]) => void
@@ -66,14 +66,7 @@ export default (props: Props) => {
         <DialogContent>
           {value.map((i, index) => (
             <Box key={`${Math.random()}`} sx={{ mt: 2, display: 'flex' }}>
-              <NumberInput
-                type={props.type === 'int[]' ? 'int' : 'float'}
-                fullWidth={props.fullWidth}
-                label={props.label}
-                map={props.map}
-                defaultValue={value[index]}
-                onChange={(v) => (value[index] = v)}
-              ></NumberInput>
+              <NumberInput type={props.type} fullWidth={props.fullWidth} label={props.label} map={props.map} defaultValue={value[index]} onChange={(v) => (value[index] = v)}></NumberInput>
               <Box sx={{ flex: 0, ml: 1 }}>
                 <IconButton sx={{ mt: '11px' }} size="small" onClick={() => add(index)}>
                   <AddCircleIcon />

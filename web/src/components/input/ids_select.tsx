@@ -9,18 +9,20 @@ import DialogContent from '@mui/material/DialogContent'
 import Box from '@mui/material/Box'
 import TextField from '@mui/material/TextField'
 import { Model } from '@/pages/admin'
+import request from 'umi-request'
 
 interface Props<T> {
   fullWidth: boolean
   table: string
   link?: string
   label: string
-  defaultValue?: T[]
+  defaultValue?: string[]
+  option?: T[]
   onChange: (value: T[]) => void
 }
 
 export default <T extends Model & { name: string }>(props: Props<T>) => {
-  const [value, setValue] = React.useState<(T | null)[]>(props.defaultValue ? [...props.defaultValue] : [])
+  const [value, setValue] = React.useState<(T | null)[]>([])
 
   const [focus, setFocus] = React.useState(false)
 
@@ -47,6 +49,14 @@ export default <T extends Model & { name: string }>(props: Props<T>) => {
     if (value.length === 0) setValue([null])
   }, [value])
 
+  React.useEffect(() => {
+    if (props.defaultValue && props.defaultValue.length > 0) {
+      request.get(`/api/${props.table}?id=${props.defaultValue.join(',')}`, { useCache: true, ttl: 10 * 60 * 1000, headers: props.link ? { link: props.link } : {} }).then(function (response) {
+        setValue(response.data)
+      })
+    }
+  }, [])
+
   return (
     <>
       <TextField fullWidth={props.fullWidth} label={props.label} InputProps={{ readOnly: true }} onPointerDown={() => setFocus(true)} value={value.map((i) => i?.name).join(' ')}></TextField>
@@ -67,7 +77,14 @@ export default <T extends Model & { name: string }>(props: Props<T>) => {
         <DialogContent>
           {value.map((i, index) => (
             <Box key={`${Math.random()}`} sx={{ mt: 2, display: 'flex' }}>
-              <IdSelect fullWidth={props.fullWidth} table={props.table} link={props.link} label={props.label} defaultValue={value[index]} onChange={(v) => (value[index] = v)}></IdSelect>
+              <IdSelect
+                fullWidth={props.fullWidth}
+                table={props.table}
+                link={props.link}
+                label={props.label}
+                defaultValue={value[index]?.id}
+                onChange={(v) => (value[index] = v as T | null)}
+              ></IdSelect>
               <Box sx={{ flex: 0, ml: 1 }}>
                 <IconButton sx={{ mt: '11px' }} size="small" onClick={() => add(index)}>
                   <AddCircleIcon />

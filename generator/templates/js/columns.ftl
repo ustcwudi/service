@@ -20,9 +20,9 @@ export const tableColumns = function (): TableColumn<${model.name}>[] {
     {
       title: '${field.description}',
       key: '${c(field.name)}',
-      <#if field.type == "id[]" && field.link??>
+      <#if field.type == "id[]">
       render: (props) => <>{props.value.${c(field.name)}Data?.map((i) => i.name)}</>,
-      <#elseif field.type == "id" && field.link??>
+      <#elseif field.type == "id">
       render: (props) => <>{props.value.${c(field.name)}Data?.name}</>,
       <#else>
       render: (props) => <>{props.value.${c(field.name)}}</>,
@@ -38,7 +38,106 @@ export const queryColumns = function (): FormColumn<${model.name}Query>[] {
     {
       title: '${field.description}',
       key: '${c(field.name)}',
+<#if type == "boolean">
+      render: (props) => <FormControlLabel labelPlacement="start" defaultChecked={props.defaultValue?.${c(field.name)}} control={<Switch onChange={(e) => (props.value.${c(field.name)} = e.target.checked)} />} label="${field.description}" />,
+<#elseif type == "number">
+      render: (props) => (
+        <NumberInput
+          type="<#if field.type?contains('int')>int<#else>float</#if>"
+<#if field.map??>
+          map={[
+<#list field.map?keys as key>
+            { label: '${key}', value: ${field.map["${key}"]} },
+</#list>
+          ]}
+</#if>
+          fullWidth
+          label="${field.description}"
+          onChange={(v) => (props.value.${c(field.name)} = v)}
+          defaultValue={props.defaultValue?.${c(field.name)}}
+        />
+      ),
+<#elseif type == "string">
+              <#if field.type == "id" || field.type == "id[]">
+      render: (props) => <IdSelect fullWidth table="${c(field.link)}" label="${field.description}" onChange={(v) => (props.value.${c(field.name)} = v && v.id ? v.id : null)} defaultValue={props.defaultValue?.${c(field.name)}}></IdSelect>,
+              <#else>
+      render: (props) => (
+<#if field.map??>
+        <StringSelect
+          map={[
+<#list field.map?keys as key>
+            { label: '${key}', value: '${field.map["${key}"]}' },
+</#list>
+          ]}
+<#else>
+        <StringInput
+</#if>
+          fullWidth
+          label="${field.description}"
+          onChange={(v) => (props.value.${c(field.name)} = v)}
+          defaultValue={props.defaultValue?.${c(field.name)}}
+        />
+      ),
+              </#if>
+<#elseif type == "number[]">
+      render: (props) => (
+        <NumberArray
+          type="<#if field.type?contains('int')>int<#else>float</#if>"
+<#if field.map??>
+          map={[
+<#list field.map?keys as key>
+            { label: '${key}', value: ${field.map["${key}"]} },
+</#list>
+          ]}
+</#if>
+          fullWidth
+          label="${field.description}"
+          onChange={(v) => (props.value.${c(field.name)} = v)}
+          defaultValue={props.defaultValue?.${c(field.name)}}
+        />
+      ),
+<#elseif type == "string[]">
+              <#if field.link??>
+      render: (props) => <IdsSelect fullWidth table="${c(field.link)}" label="${field.description}" onChange={(v) => (props.value.${c(field.name)} = v.map((i) => i.id as string))} defaultValue={props.defaultValue?.${c(field.name)}}></IdsSelect>,
+              <#else>
+      render: (props) => (
+        <StringArray
+<#if field.map??>
+          map={[
+<#list field.map?keys as key>
+            { label: '${key}', value: '${field.map["${key}"]}' },
+</#list>
+          ]}
+</#if>
+          fullWidth
+          label="${field.description}"
+          onChange={(v) => (props.value.${c(field.name)} = v)}
+          defaultValue={props.defaultValue?.${c(field.name)}}
+        />
+      ),
+              </#if>
+<#elseif type == "{ [key: string]: string }">
+      render: (props) => (
+        <StringMap
+          fullWidth
+          label="${field.description}"
+          onChange={(v) => (props.value.${c(field.name)} = v)}
+          defaultValue={props.defaultValue?.${c(field.name)}}
+        />
+      ),
+<#elseif type == "{ [key: string]: number }">
+      render: (props) => (
+        <NumberMap
+          type="<#if field.type?contains('int')>int<#else>float</#if>"
+          fullWidth
+          label="${field.description}"
+          onChange={(v) => (props.value.${c(field.name)} = v)}
+          defaultValue={props.defaultValue?.${c(field.name)}}
+        />
+      ),
+<#else>
       render: (props) => <TextField fullWidth label="${field.description}" onChange={(e) => (props.value.${c(field.name)} = e.target.value)} defaultValue={props.defaultValue?.${c(field.name)}}></TextField>,
+</#if>
     },
 </#if></#list>
   ]
@@ -51,9 +150,9 @@ export const formColumns = function (): FormColumn<${model.name}>[] {
       title: '${field.description}',
       key: '${c(field.name)}',
 <#if field.type == "id">
-      render: (props) => <IdSelect fullWidth table="${c(field.link)}" label="${field.description}" onChange={(v) => (props.value.${c(field.name)} = v && v.id ? v.id : null)} defaultValue={props.defaultValue?.${c(field.name)}Data}></IdSelect>,
+      render: (props) => <IdSelect fullWidth table="${c(field.link)}" label="${field.description}" onChange={(v) => (props.value.${c(field.name)} = v && v.id ? v.id : null)} defaultValue={props.defaultValue?.${c(field.name)}}></IdSelect>,
 <#elseif field.type == "id[]">
-      render: (props) => <IdsSelect fullWidth table="${c(field.link)}" label="${field.description}" onChange={(v) => (props.value.${c(field.name)} = v.map((i) => i.id as string))} defaultValue={props.defaultValue?.${c(field.name)}Data}></IdsSelect>,
+      render: (props) => <IdsSelect fullWidth table="${c(field.link)}" label="${field.description}" onChange={(v) => (props.value.${c(field.name)} = v.map((i) => i.id as string))} defaultValue={props.defaultValue?.${c(field.name)}}></IdsSelect>,
 <#elseif field.type == "bool">
       render: (props) => <FormControlLabel labelPlacement="start" defaultChecked={props.defaultValue?.${c(field.name)}} control={<Switch onChange={(e) => (props.value.${c(field.name)} = e.target.checked)} />} label="${field.description}" />,
 <#elseif field.type == "int" || field.type == "float">
@@ -76,7 +175,7 @@ export const formColumns = function (): FormColumn<${model.name}>[] {
 <#elseif field.type == "int[]" || field.type == "float[]">
       render: (props) => (
         <NumberArray
-          type="${field.type}"
+          type="<#if field.type?contains('int')>int<#else>float</#if>"
 <#if field.map??>
           map={[
 <#list field.map?keys as key>
@@ -93,7 +192,7 @@ export const formColumns = function (): FormColumn<${model.name}>[] {
 <#elseif field.type == "map[string]int" || field.type == "map[string]float">
       render: (props) => (
         <NumberMap
-          type="${field.type}"
+          type="<#if field.type?contains('int')>int<#else>float</#if>"
           fullWidth
           label="${field.description}"
           onChange={(v) => (props.value.${c(field.name)} = v)}
