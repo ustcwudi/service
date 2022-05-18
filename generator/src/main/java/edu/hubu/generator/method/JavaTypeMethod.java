@@ -35,12 +35,6 @@ public class JavaTypeMethod implements TemplateMethodModelEx {
                 return "Map<String, Integer>";
             case "map[string]float":
                 return "Map<String, Float>";
-            case "map[string]string[]":
-                return "Map<String, List<String>>";
-            case "map[string]int[]":
-                return "Map<String, List<Integer>>";
-            case "map[string]float[]":
-                return "Map<String, List<Float>>";
             default:
                 return "";
         }

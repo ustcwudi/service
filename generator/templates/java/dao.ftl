@@ -74,14 +74,6 @@ public class ${model.name}MongoDao extends MongoDao<${model.name}, ${model.name}
                             map${field.name}.put(array[0], array[1]);
                         }
                         model.set${field.name}(map${field.name});
-                    <#elseif field.type == "map[string]string[]">
-                        Map<String, List<String>> map${field.name} = new HashMap<>();
-                        var pairs${field.name} = span.split(";");
-                        for (var pair : pairs${field.name}) {
-                            var array = pair.split(":");
-                            map${field.name}.put(array[0], List.of(array[1].split("|")));
-                        }
-                        model.set${field.name}(map${field.name});
                     <#elseif field.type == "map[string]int">
                         Map<String, Integer> map${field.name} = new HashMap<>();
                         var pairs${field.name} = span.split(";");
@@ -96,32 +88,6 @@ public class ${model.name}MongoDao extends MongoDao<${model.name}, ${model.name}
                         for (var pair : pairs${field.name}) {
                             var array = pair.split(":");
                             map${field.name}.put(array[0], Float.parseFloat(array[1]));
-                        }
-                        model.set${field.name}(map${field.name});
-                    <#elseif field.type == "map[string]int[]">
-                        Map<String, List<Integer>> map${field.name} = new HashMap<>();
-                        var pairs${field.name} = span.split(";");
-                        for (var pair : pairs${field.name}) {
-                            var array = pair.split(":");
-                            var value = array[1].split("|");
-                            var newValue = new ArrayList<Integer>();
-                            for (String element : value) {
-                                newValue.add(Integer.parseInt(element));
-                            }
-                            map${field.name}.put(array[0], newValue);
-                        }
-                        model.set${field.name}(map${field.name});
-                    <#elseif field.type == "map[string]float[]">
-                        Map<String, List<Float>> map${field.name} = new HashMap<>();
-                        var pairs${field.name} = span.split(";");
-                        for (var pair : pairs${field.name}) {
-                            var array = pair.split(":");
-                            var value = array[1].split("|");
-                            var newValue = new ArrayList<Float>();
-                            for (String element : value) {
-                                newValue.add(Float.parseFloat(element));
-                            }
-                            map${field.name}.put(array[0], newValue);
                         }
                         model.set${field.name}(map${field.name});
                     </#if>

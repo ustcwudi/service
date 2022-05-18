@@ -97,27 +97,6 @@
       "description": "字符串键值对",
       "search": "equal",
       "show": true
-    },
-    {
-      "name": "TestIntArrayMap",
-      "type": "map[string]int[]",
-      "description": "整数组键值对",
-      "search": "equal",
-      "show": true
-    },
-    {
-      "name": "TestFloatArrayMap",
-      "type": "map[string]float[]",
-      "description": "浮点组键值对",
-      "search": "equal",
-      "show": true
-    },
-    {
-      "name": "TestStringArrayMap",
-      "type": "map[string]string[]",
-      "description": "字符串组键值对",
-      "search": "equal",
-      "show": true
     }
   ]
 }

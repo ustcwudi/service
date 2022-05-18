@@ -32,11 +32,6 @@ public class ScriptTypeMethod implements TemplateMethodModelEx {
             case "map[string]int":
             case "map[string]float":
                 return "{ [key: string]: number }";
-            case "map[string]string[]":
-                return "{ [key: string]: string[] }";
-            case "map[string]int[]":
-            case "map[string]float[]":
-                return "{ [key: string]: number[] }";
             default:
                 return "";
         }

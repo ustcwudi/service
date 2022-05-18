@@ -67,13 +67,10 @@ public class QueryTypeMethod implements TemplateMethodModelEx {
                         case "string[]":
                             return "String";
                         case "map[string]string":
-                        case "map[string]string[]":
                             return "Map<String, String>";
                         case "map[string]int":
-                        case "map[string]int[]":
                             return "Map<String, Integer>";
                         case "map[string]float":
-                        case "map[string]float[]":
                             return "Map<String, Float>";
                         default:
                             return "";
@@ -84,7 +81,6 @@ public class QueryTypeMethod implements TemplateMethodModelEx {
                         case "string[]":
                             return "String";
                         case "map[string]string":
-                        case "map[string]string[]":
                             return "Map<String, String>";
                         default:
                             return "";

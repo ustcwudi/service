@@ -35,12 +35,6 @@ public class MethodTypeMethod implements TemplateMethodModelEx {
                 return "IntMap";
             case "map[string]float":
                 return "FloatMap";
-            case "map[string]string[]":
-                return "StringArrayMap";
-            case "map[string]int[]":
-                return "IntArrayMap";
-            case "map[string]float[]":
-                return "FloatArrayMap";
             default:
                 return "";
         }
