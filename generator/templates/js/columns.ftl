@@ -4,6 +4,7 @@ import type { TableColumn, FormColumn } from '../'
 import TextField from '@mui/material/TextField'
 import NumberInput from '@/components/input/number'
 import StringInput from '@/components/input/string'
+import StringSelect from '@/components/input/string_select'
 import NumberArray from '@/components/input/number_array'
 import StringArray from '@/components/input/string_array'
 import StringMap from '@/components/input/string_map'
@@ -49,9 +50,9 @@ export const formColumns = function (): FormColumn<${model.name}>[] {
     {
       title: '${field.description}',
       key: '${c(field.name)}',
-<#if field.type == "id" && field.link??>
+<#if field.type == "id">
       render: (props) => <IdSelect fullWidth table="${c(field.link)}" label="${field.description}" onChange={(v) => (props.value.${c(field.name)} = v && v.id ? v.id : null)} defaultValue={props.defaultValue?.${c(field.name)}Data}></IdSelect>,
-<#elseif field.type == "id[]" && field.link??>
+<#elseif field.type == "id[]">
       render: (props) => <IdsSelect fullWidth table="${c(field.link)}" label="${field.description}" onChange={(v) => (props.value.${c(field.name)} = v.map((i) => i.id as string))} defaultValue={props.defaultValue?.${c(field.name)}Data}></IdsSelect>,
 <#elseif field.type == "bool">
       render: (props) => <FormControlLabel labelPlacement="start" defaultChecked={props.defaultValue?.${c(field.name)}} control={<Switch onChange={(e) => (props.value.${c(field.name)} = e.target.checked)} />} label="${field.description}" />,
@@ -101,13 +102,15 @@ export const formColumns = function (): FormColumn<${model.name}>[] {
       ),
 <#elseif field.type == "string">
       render: (props) => (
-        <StringInput
 <#if field.map??>
+        <StringSelect
           map={[
 <#list field.map?keys as key>
             { label: '${key}', value: '${field.map["${key}"]}' },
 </#list>
           ]}
+<#else>
+        <StringInput
 </#if>
           fullWidth
           label="${field.description}"

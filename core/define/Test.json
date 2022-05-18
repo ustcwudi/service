@@ -49,7 +49,12 @@
       "type": "string",
       "description": "字符串",
       "search": "equal",
-      "show": true
+      "show": true,
+      "map": {
+        "未知": "0",
+        "男性": "1",
+        "女性": "2"
+      }
     },
     {
       "name": "TestIntList",

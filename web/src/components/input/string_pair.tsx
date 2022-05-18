@@ -8,13 +8,13 @@ interface Props {
   label: string
   defaultKey?: string
   defaultValue?: string
-  onChange: (pair: { key?: string; value?: string }) => void
+  onChange: (pair: { key: string; value: string }) => void
 }
 
 export default (props: Props) => {
   const [defaultKey] = React.useState(props.defaultKey)
   const [defaultValue] = React.useState(props.defaultValue)
-  const [pair, setPair] = React.useState({ key: props.defaultKey, value: props.defaultValue })
+  const [pair, setPair] = React.useState({ key: props.defaultKey ? props.defaultKey : '', value: props.defaultValue ? props.defaultValue : '' })
 
   React.useEffect(() => {
     props.onChange(pair)

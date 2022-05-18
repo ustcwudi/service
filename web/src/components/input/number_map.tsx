@@ -13,8 +13,8 @@ interface Props {
   fullWidth: boolean
   label: string
   type: 'map[string]int' | 'map[string]float'
-  defaultValue?: Record<string, number | null>
-  onChange: (value: Record<string, number | null>) => void
+  defaultValue?: Record<string, number>
+  onChange: (value: Record<string, number>) => void
 }
 
 export default (props: Props) => {
@@ -65,7 +65,7 @@ export default (props: Props) => {
         fullWidth={true}
         onClose={() => {
           setFocus(false)
-          let result: { key: string; value: number | null }[] = []
+          let result: { key: string; value: number }[] = []
           value.forEach((p) => {
             if (p.key && p.value) result.push({ key: p.key, value: p.value })
           })

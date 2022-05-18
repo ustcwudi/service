@@ -25,6 +25,7 @@ import request from 'umi-request'
 import { useRequest } from 'ahooks'
 
 interface Props<T, Q> {
+  emptyModel: () => T
   tableColumns: TableColumn<T>[]
   queryColumns: FormColumn<Q>[]
   formColumns: FormColumn<T>[]
@@ -77,7 +78,8 @@ export default <T extends Model, Q extends QueryModel>(props: Props<T, Q>) => {
         setOrder({ key: key, direction: isAsc ? 'desc' : 'asc' })
         break
       case 'add':
-        setCurrent({} as T)
+        setCandidate(props.emptyModel())
+        setCurrent(props.emptyModel())
         break
       case 'query':
         setQuery({} as Q)

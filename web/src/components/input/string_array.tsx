@@ -1,6 +1,7 @@
 import * as React from 'react'
 import AddCircleIcon from '@mui/icons-material/AddCircle'
 import StringInput from './string'
+import StringSelect from './string_select'
 import DialogTitle from '@mui/material/DialogTitle'
 import Dialog from '@mui/material/Dialog'
 import IconButton from '@mui/material/IconButton'
@@ -66,7 +67,11 @@ export default (props: Props) => {
         <DialogContent>
           {value.map((i, index) => (
             <Box key={`${Math.random()}`} sx={{ mt: 2, display: 'flex' }}>
-              <StringInput fullWidth={props.fullWidth} label={props.label} map={props.map} defaultValue={value[index]} onChange={(v) => (value[index] = v)}></StringInput>
+              {props.map ? (
+                <StringSelect fullWidth={props.fullWidth} label={props.label} map={props.map} defaultValue={value[index]} onChange={(v) => (value[index] = v ? v : '')}></StringSelect>
+              ) : (
+                <StringInput fullWidth={props.fullWidth} label={props.label} defaultValue={value[index]} onChange={(v) => (value[index] = v)}></StringInput>
+              )}
               <Box sx={{ flex: 0, ml: 1 }}>
                 <IconButton sx={{ mt: '11px' }} size="small" onClick={() => add(index)}>
                   <AddCircleIcon />

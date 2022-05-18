@@ -8,14 +8,14 @@ interface Props {
   label: string
   type: 'int' | 'float'
   defaultKey?: string
-  defaultValue: number | null
-  onChange: (pair: { key?: string; value: number | null }) => void
+  defaultValue?: number | null
+  onChange: (pair: { key: string; value: number | null }) => void
 }
 
 export default (props: Props) => {
   const [defaultKey] = React.useState(props.defaultKey)
   const [defaultValue] = React.useState(props.defaultValue)
-  const [pair, setPair] = React.useState({ key: props.defaultKey, value: props.defaultValue })
+  const [pair, setPair] = React.useState({ key: props.defaultKey ? props.defaultKey : '', value: props.defaultValue === null || props.defaultValue === undefined ? null : props.defaultValue })
 
   React.useEffect(() => {
     props.onChange(pair)
