@@ -65,8 +65,7 @@ public abstract class MongoDao<T extends Model, Q extends QueryRequest> {
         return output;
     }
 
-    public List<T> link(String link, List<T> list) {
-        return List.of();
+    public void link(String link, List<T> list) {
     }
 
     public T findOne(String id, String[] links) {
@@ -106,7 +105,7 @@ public abstract class MongoDao<T extends Model, Q extends QueryRequest> {
     public List<T> find(Query query, String[] links) {
         var result = mongoTemplate.find(query, clazz);
         for (String link : links) {
-            result = link(link, result);
+            link(link, result);
         }
         return result;
     }
@@ -175,15 +174,35 @@ public abstract class MongoDao<T extends Model, Q extends QueryRequest> {
     }
 
     public T add(T t) {
+        return add(t, new String[] {});
+    }
+
+    public T add(T t, String[] links) {
         requestBuilder.buildInsert(t);
-        return mongoTemplate.insert(t);
+        var result = List.of(mongoTemplate.insert(t));
+        for (String link : links) {
+            link(link, result);
+        }
+        return result.get(0);
     }
 
     public Collection<T> add(Collection<T> collection) {
+        return add(collection, new String[] {});
+    }
+
+    public Collection<T> add(Collection<T> collection, String[] links) {
         for (T t : collection) {
             requestBuilder.buildInsert(t);
         }
-        return mongoTemplate.insert(collection, clazz);
+        var result = mongoTemplate.insert(collection, clazz);
+        var array = new ArrayList<T>();
+        for (T t : result) {
+            array.add(t);
+        }
+        for (String link : links) {
+            link(link, array);
+        }
+        return array;
     }
 
     public List<String> distinct(String field) {

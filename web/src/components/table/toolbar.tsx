@@ -1,3 +1,4 @@
+import * as React from 'react'
 import Toolbar from '@mui/material/Toolbar'
 import Typography from '@mui/material/Typography'
 import IconButton from '@mui/material/IconButton'
@@ -5,11 +6,20 @@ import Tooltip from '@mui/material/Tooltip'
 import DeleteIcon from '@mui/icons-material/Delete'
 import FilterListIcon from '@mui/icons-material/FilterList'
 import FilterListOffIcon from '@mui/icons-material/FilterListOff'
+import DeleteOutlineTwoToneIcon from '@mui/icons-material/DeleteOutlineTwoTone'
+import DeleteTwoToneIcon from '@mui/icons-material/DeleteTwoTone'
+import RestoreIcon from '@mui/icons-material/Restore'
 import CancelIcon from '@mui/icons-material/Cancel'
 import AddIcon from '@mui/icons-material/Add'
 import { alpha } from '@mui/material/styles'
 
-export default (props: { totalSelected: number; query: Record<string, any>; onCommand: (type: string, parameter?: any) => void }) => {
+interface Props {
+  totalSelected: number
+  query: Record<string, any>
+  onCommand: (type: string, parameter?: any) => void
+  garbage: boolean
+}
+export default (props: Props) => {
   const { totalSelected } = props
 
   return (
@@ -36,8 +46,15 @@ export default (props: { totalSelected: number; query: Record<string, any>; onCo
               <CancelIcon />
             </IconButton>
           </Tooltip>
-          <Tooltip title="删除">
-            <IconButton>
+          {props.garbage && (
+            <Tooltip title="还原">
+              <IconButton onClick={() => props.onCommand('restore')}>
+                <RestoreIcon />
+              </IconButton>
+            </Tooltip>
+          )}
+          <Tooltip title={props.garbage ? '彻底删除' : '回收'}>
+            <IconButton onClick={() => (props.garbage ? props.onCommand('delete') : props.onCommand('trash'))}>
               <DeleteIcon />
             </IconButton>
           </Tooltip>
@@ -56,10 +73,15 @@ export default (props: { totalSelected: number; query: Record<string, any>; onCo
               <FilterListIcon />
             </IconButton>
           </Tooltip>
-          <Tooltip title="新增">
-            <IconButton onClick={() => props.onCommand('add')}>
-              <AddIcon />
-            </IconButton>
+          {!props.garbage && (
+            <Tooltip title="新增">
+              <IconButton onClick={() => props.onCommand('add')}>
+                <AddIcon />
+              </IconButton>
+            </Tooltip>
+          )}
+          <Tooltip title={props.garbage ? '退出回收站' : '进入回收站'}>
+            <IconButton onClick={() => props.onCommand('garbage')}>{props.garbage ? <DeleteTwoToneIcon /> : <DeleteOutlineTwoToneIcon />}</IconButton>
           </Tooltip>
         </>
       )}

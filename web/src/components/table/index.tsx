@@ -34,8 +34,11 @@ interface Props<T, Q> {
 }
 
 export default <T extends Model, Q extends QueryModel>(props: Props<T, Q>) => {
+  const [tableData, setTableData] = React.useState<T[]>([])
   const [selected, setSelected] = React.useState<readonly string[]>([])
   const [pagination, setPagination] = React.useState({ page: 1, pageSize: 10 })
+  const [total, setTotal] = React.useState(0)
+  const [garbage, setGarbage] = React.useState<boolean>(false)
   const [candidate, setCandidate] = React.useState<T>({} as T)
   const [current, setCurrent] = React.useState<T | undefined>(undefined)
   const [currentQuery, setCurrentQuery] = React.useState<Q | undefined>(undefined)
@@ -43,13 +46,40 @@ export default <T extends Model, Q extends QueryModel>(props: Props<T, Q>) => {
   const [order, setOrder] = React.useState<{ key: keyof T; direction: 'asc' | 'desc' }>({ key: 'createTime', direction: 'asc' })
 
   const queryRequest = useRequest(
-    () => request.post(`/api/${props.table}/query/${order.key}/${order.direction}/${pagination.page}/${pagination.pageSize}`, { data: query, headers: { link: props.link } }),
+    () => request.post(`/api/${props.table}/query/${order.key}/${order.direction}/${pagination.page}/${pagination.pageSize}`, { data: { ...query, trash: garbage }, headers: { link: props.link } }),
     {
-      refreshDeps: [pagination, order, query],
+      refreshDeps: [pagination, order, query, garbage],
+      onSuccess: (data) => {
+        if (data.data) setTableData(data.data)
+      },
     },
   )
 
-  const countRequest = useRequest(() => request.post(`/api/${props.table}/count`, { data: {} }))
+  const countRequest = useRequest(() => request.post(`/api/${props.table}/count`, { data: { ...query, trash: garbage } }), {
+    refreshDeps: [query, garbage],
+    onSuccess: (data) => {
+      setTotal(data.data)
+    },
+  })
+
+  const insertRequest = useRequest(() => request.post(`/api/${props.table}`, { data: candidate, headers: { link: props.link } }), {
+    manual: true,
+    onSuccess: (data) => {
+      setTableData(tableData.concat(data.data))
+    },
+  })
+
+  const updateRequest = useRequest((id: string) => request.put(`/api/${props.table}/id/${id}`, { data: candidate, headers: { link: props.link } }), {
+    manual: true,
+    onSuccess: (data, params) => {
+      if (data.data == 1) {
+        request.get(`/api/${props.table}/id/${params[0]}`, { headers: { link: props.link } }).then((result) => {
+          let index = tableData.findIndex((i) => i.id === params[0])
+          setTableData(tableData.slice(0, index).concat(result.data, tableData.slice(index + 1, tableData.length)))
+        })
+      }
+    },
+  })
 
   const checkChange = (check: boolean, id?: string) => {
     if (id) {
@@ -71,7 +101,7 @@ export default <T extends Model, Q extends QueryModel>(props: Props<T, Q>) => {
         break
       case 'selectAll':
         let checked = paramter as boolean
-        checked ? setSelected(queryRequest.data?.data?.map((row: T) => row.id)) : setSelected([])
+        checked ? setSelected(tableData.map((row: T) => row.id as string)) : setSelected([])
         break
       case 'sort':
         let key = paramter as keyof T
@@ -82,18 +112,69 @@ export default <T extends Model, Q extends QueryModel>(props: Props<T, Q>) => {
         setCandidate(props.emptyModel())
         setCurrent(props.emptyModel())
         break
+      case 'garbage':
+        setGarbage(!garbage)
+        setSelected([])
+        setQuery({} as Q)
+        if (pagination.page > 1) setPagination({ ...pagination, page: 1 })
+        break
       case 'query':
         setCurrentQuery(query)
         break
       case 'unquery':
         setQuery({} as Q)
         break
+      case 'trash':
+        request.put(`/api/${props.table}/trash`, { data: { id: selected } }).then((result) => {
+          if (result.data === selected.length) {
+            selected.forEach((id) => {
+              let index = tableData.findIndex((i) => i.id === id)
+              if (index > -1) {
+                tableData.splice(index, 1)
+              }
+            })
+            setTotal(total - selected.length)
+            setSelected([])
+            setTableData([...tableData])
+          }
+        })
+        break
+      case 'restore':
+        request.put(`/api/${props.table}/restore`, { data: { id: selected, trash: true } }).then((result) => {
+          if (result.data === selected.length) {
+            selected.forEach((id) => {
+              let index = tableData.findIndex((i) => i.id === id)
+              if (index > -1) {
+                tableData.splice(index, 1)
+              }
+            })
+            setTotal(total - selected.length)
+            setSelected([])
+            setTableData([...tableData])
+          }
+        })
+        break
+      case 'delete':
+        request.delete(`/api/${props.table}`, { data: { id: selected, trash: true } }).then((result) => {
+          if (result.data === selected.length) {
+            selected.forEach((id) => {
+              let index = tableData.findIndex((i) => i.id === id)
+              if (index > -1) {
+                tableData.splice(index, 1)
+              }
+            })
+            setTotal(total - selected.length)
+            setSelected([])
+            setTableData([...tableData])
+          }
+        })
+        break
     }
   }
 
   return (
     <Paper>
-      <Toolbar query={query} totalSelected={selected.length} onCommand={onCommand} />
+      <Toolbar garbage={garbage} query={query} totalSelected={selected.length} onCommand={onCommand} />
       <TableContainer>
         <Table sx={{ minWidth: 1200 }}>
           {/* 表头 */}
@@ -101,12 +182,12 @@ export default <T extends Model, Q extends QueryModel>(props: Props<T, Q>) => {
             columns={props.tableColumns}
             order={order}
             onCommand={onCommand}
-            currentSelected={queryRequest.data?.data?.length ? queryRequest.data.data.map((row: T) => (isSelected(row.id) ? 1 : 0)).reduce((pre: number, cur: number) => pre + cur) : 0}
-            currentSize={queryRequest.data?.data?.length ? queryRequest.data.data.length : 0}
+            currentSelected={tableData.length ? tableData.map((row: T) => (isSelected(row.id) ? Number(1) : Number(0))).reduce((pre: number, cur: number) => pre + cur) : 0}
+            currentSize={tableData.length}
           />
           {/* 表格 */}
           <TableBody>
-            {queryRequest.data?.data?.map((row: T) => {
+            {tableData.map((row: T) => {
               const isItemSelected = isSelected(row.id)
 
               return (
@@ -127,7 +208,12 @@ export default <T extends Model, Q extends QueryModel>(props: Props<T, Q>) => {
                       <IconButton>
                         <VisibilityIcon />
                       </IconButton>
-                      <IconButton onClick={() => setCurrent(row)}>
+                      <IconButton
+                        onClick={() => {
+                          setCandidate({} as T)
+                          setCurrent(row)
+                        }}
+                      >
                         <EditIcon />
                       </IconButton>
                     </Stack>
@@ -145,7 +231,7 @@ export default <T extends Model, Q extends QueryModel>(props: Props<T, Q>) => {
                   showFirstButton
                   showLastButton
                   sx={{ float: 'right', m: 1.5 }}
-                  count={countRequest?.data?.data ? (countRequest.data.data - (countRequest.data.data % pagination.pageSize)) / pagination.pageSize + 1 : 0}
+                  count={total ? (total - (total % pagination.pageSize)) / pagination.pageSize + 1 : 0}
                   shape="rounded"
                   page={pagination.page}
                   onChange={(e, page) => setPagination({ ...pagination, page: page })}
@@ -170,8 +256,12 @@ export default <T extends Model, Q extends QueryModel>(props: Props<T, Q>) => {
           <Button onClick={() => setCurrent(undefined)}>取消</Button>
           <Button
             onClick={() => {
+              if (current?.id) {
+                updateRequest.run(current?.id as string)
+              } else {
+                insertRequest.run()
+              }
               setCurrent(undefined)
-              console.log(candidate)
               setCandidate({} as T)
             }}
           >
@@ -194,7 +284,7 @@ export default <T extends Model, Q extends QueryModel>(props: Props<T, Q>) => {
           <Button onClick={() => setCurrentQuery(undefined)}>取消</Button>
           <Button
             onClick={() => {
-              console.log(query)
+              setPagination({ ...pagination, page: 1 })
               queryRequest.run()
               setCurrentQuery(undefined)
             }}

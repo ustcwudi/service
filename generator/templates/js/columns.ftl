@@ -21,9 +21,13 @@ export const tableColumns = function (): TableColumn<${model.name}>[] {
       title: '${field.description}',
       key: '${c(field.name)}',
       <#if field.type == "id[]">
-      render: (props) => <>{props.value.${c(field.name)}Data?.map((i) => i.name)}</>,
+      render: (props) => <>{props.value.${c(field.name)}Data?.map((i) => i.name).join('、')}</>,
       <#elseif field.type == "id">
       render: (props) => <>{props.value.${c(field.name)}Data?.name}</>,
+      <#elseif field.type == "int[]" || field.type == "float[]" || field.type == "string[]">
+      render: (props) => <>{props.value.${c(field.name)}?.join('、')}</>,
+      <#elseif field.type == "map[string]int" || field.type == "map[string]float" || field.type == "map[string]string">
+      render: (props) => <>{Object.entries(props.value.${c(field.name)}).map((i) => i[0] + ":" + i[1]).join('、')}</>,
       <#else>
       render: (props) => <>{props.value.${c(field.name)}}</>,
       </#if>

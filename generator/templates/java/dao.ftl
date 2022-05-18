@@ -101,7 +101,7 @@ public class ${model.name}MongoDao extends MongoDao<${model.name}, ${model.name}
     }
 
     @Override
-    public List<${model.name}> link(String link, List<${model.name}> list) {
+    public void link(String link, List<${model.name}> list) {
         switch (link) {
             <#list model.fields as field><#if field.link??>
             case "${u(field.name)}":
@@ -109,7 +109,6 @@ public class ${model.name}MongoDao extends MongoDao<${model.name}, ${model.name}
                 break;
             </#if></#list>
         }
-        return list;
     }
     <#list model.fields as field>
     <#if field.link??>

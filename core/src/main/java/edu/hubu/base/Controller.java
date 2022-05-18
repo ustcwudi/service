@@ -21,14 +21,18 @@ public class Controller<T extends Model, Q extends QueryRequest> {
 
     @PostMapping()
     @ApiOperation("新增")
-    public Result add(@ApiIgnore Token token, @RequestBody T t) {
-        return Result.ok(mongoDao.add(t));
+    public Result add(@ApiIgnore Token token, @RequestBody T t,
+            @RequestHeader(value = "link", required = false) String link) {
+        String[] links = link == null ? new String[] {} : link.split(",");
+        return Result.ok(mongoDao.add(t, links));
     }
 
     @PostMapping("/multi")
     @ApiOperation("批量新增")
-    public Result add(@ApiIgnore Token token, @RequestBody Collection<T> collection) {
-        return Result.ok(mongoDao.add(collection));
+    public Result add(@ApiIgnore Token token, @RequestBody Collection<T> collection,
+            @RequestHeader(value = "link", required = false) String link) {
+        String[] links = link == null ? new String[] {} : link.split(",");
+        return Result.ok(mongoDao.add(collection, links));
     }
 
     @GetMapping("/id/{id}")
