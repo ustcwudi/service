@@ -14,8 +14,8 @@ public class TokenService {
     @Autowired
     private ServiceConfiguration serviceConfiguration;
 
-    public String encode(Token token) {
-        return JWT.create().withExpiresAt(new Date(System.currentTimeMillis() + 1000 * 3600))
+    public String encode(Token token, int maxAge) {
+        return JWT.create().withExpiresAt(new Date(System.currentTimeMillis() + 1000 * maxAge))
                 .withClaim("uid", token.getUid())
                 .withClaim("rid", token.getRid())
                 .withClaim("account", token.getAccount())

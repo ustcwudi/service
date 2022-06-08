@@ -54,7 +54,7 @@ export default (props: Props) => {
               </IconButton>
             </Tooltip>
           )}
-          <Tooltip title={props.garbage ? '彻底删除' : '回收'}>
+          <Tooltip title={props.garbage ? '彻底删除' : '删除'}>
             <IconButton onClick={() => (props.garbage ? props.onCommand('delete') : props.onCommand('trash'))}>
               <DeleteIcon />
             </IconButton>

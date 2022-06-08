@@ -44,7 +44,7 @@ export default () => {
       <TextField onChange={(e) => setForm({ ...form, password: e.target.value })} fullWidth label="密码" type="password" sx={{ mb: 3 }} />
       <Captcha onChange={(e) => setForm({ ...form, captcha: `${id}:${e.target.value}` })} onUpdate={setId} />
       <Box sx={{ mt: 2, mb: 2 }}>
-        <FormControlLabel control={<Checkbox />} label="记住我" />
+        <FormControlLabel control={<Checkbox onChange={(e) => setForm({ ...form, remember: e.target.checked })} />} label="记住我" />
         <Link sx={{ float: 'right', lineHeight: '42px' }} href="#" underline="none">
           忘记密码？
         </Link>

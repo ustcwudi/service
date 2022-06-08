@@ -44,7 +44,7 @@ export default <T extends Model, Q extends QueryModel>(props: Props<T, Q>) => {
   const [current, setCurrent] = React.useState<T | undefined>(undefined)
   const [currentQuery, setCurrentQuery] = React.useState<Q | undefined>(undefined)
   const [query, setQuery] = React.useState<Q>({} as Q)
-  const [order, setOrder] = React.useState<{ key: keyof T; direction: 'asc' | 'desc' }>({ key: 'createTime', direction: 'asc' })
+  const [order, setOrder] = React.useState<{ key: keyof T; direction: 'asc' | 'desc' }>({ key: 'id', direction: 'desc' })
 
   const queryRequest = useRequest(
     () => request.post(`/api/${props.table}/query/${order.key}/${order.direction}/${pagination.page}/${pagination.pageSize}`, { data: { ...query, trash: garbage }, headers: { link: props.link } }),

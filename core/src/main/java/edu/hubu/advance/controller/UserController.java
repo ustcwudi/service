@@ -37,23 +37,27 @@ public class UserController extends edu.hubu.auto.controller.UserController {
         @NotEmpty(message = "用户名不能为空")
         private String account;
         private String password;
+        private Boolean remember;
         @CaptchaValid
         private String captcha;
     }
 
     @PostMapping("login")
     @ApiOperation("登录")
-    public Result login(@ApiIgnore HttpServletResponse response, @Valid @RequestBody LoginForm form, @RequestHeader(value = "link", required = false) String link) {
+    public Result login(@ApiIgnore HttpServletResponse response, @Valid @RequestBody LoginForm form,
+            @RequestHeader(value = "link", required = false) String link) {
         Query query = new Query().addCriteria(Criteria.where("account").is(form.getAccount()))
                 .addCriteria(Criteria.where("password").is(form.getPassword()));
-        String[] links = link == null ? new String[]{} : link.split(",");
+        String[] links = link == null ? new String[] {} : link.split(",");
         var user = userMongoDao.findOne(query, links);
         if (user != null) {
             var token = new Token();
             token.setUid(user.getId());
             token.setRid(user.getRole());
             token.setAccount(user.getAccount());
-            var cookie = new Cookie("jwt", tokenService.encode(token));
+            var maxAge = form.getRemember() ? 7 * 24 * 3600 : 8 * 3600;
+            var cookie = new Cookie("jwt", tokenService.encode(token, maxAge));
+            cookie.setMaxAge(maxAge);
             cookie.setPath("/");
             response.addCookie(cookie);
             return Result.ok(user);
@@ -65,6 +69,6 @@ public class UserController extends edu.hubu.auto.controller.UserController {
     @GetMapping("info")
     @ApiOperation("个人信息")
     public Result info(@ApiIgnore Token token) {
-        return Result.ok(userMongoDao.findOne(token.getUid(), new String[]{"role"}));
+        return Result.ok(userMongoDao.findOne(token.getUid(), new String[] { "role" }));
     }
 }
