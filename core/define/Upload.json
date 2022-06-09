@@ -44,7 +44,7 @@
     },
     {
       "name": "Key",
-      "type": "id",
+      "type": "string",
       "description": "关联外键",
       "search": "equal",
       "show": true
