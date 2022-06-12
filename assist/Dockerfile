@@ -12,14 +12,15 @@ RUN apk update && \
 ENV PATH "$PATH:/gradle-${GRADLE_VERSION}/bin/"
 
 WORKDIR /service
-RUN gradlew :generator:bootRun --args=assist
+RUN chmod +x gradlew
+RUN ./gradlew :generator:bootRun --args=assist
 
 WORKDIR /service/web
 RUN npm install && npm run build
 RUN mv /service/web/dist /service/assist/src/main/resources/static
 
 WORKDIR /service
-RUN gradlew :assist:build
+RUN ./gradlew :assist:build
 
 FROM alpine:latest AS final
 RUN apk update && \
