@@ -1,4 +1,4 @@
-import * as React from 'react'
+import React, { useState } from 'react'
 import AppBar from '@mui/material/AppBar'
 import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
@@ -14,7 +14,8 @@ import AcUnitIcon from '@mui/icons-material/AcUnit'
 import { Menu as MenuModel } from '../pages/admin/menu/index'
 
 export default (props: { menu: MenuModel[]; menuChanged: (id?: string) => void }) => {
-  const settings = ['Profile', 'Account', 'Dashboard', 'Logout']
+  const [mailCount, setMailCount] = useState(0)
+  const [noticeCount, setNoticeCount] = useState(0)
   return (
     <AppBar position="fixed">
       <Toolbar>
@@ -33,12 +34,12 @@ export default (props: { menu: MenuModel[]; menuChanged: (id?: string) => void }
         </Box>
         <Box sx={{ display: 'flex' }}>
           <IconButton size="large" color="inherit">
-            <Badge badgeContent={4} color="error">
+            <Badge badgeContent={mailCount} color="error">
               <MailIcon />
             </Badge>
           </IconButton>
           <IconButton size="large" color="inherit">
-            <Badge badgeContent={17} color="error">
+            <Badge badgeContent={noticeCount} color="error">
               <NotificationsIcon />
             </Badge>
           </IconButton>

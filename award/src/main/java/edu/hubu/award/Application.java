@@ -16,10 +16,11 @@ import java.io.File;
 
 @Slf4j
 @SpringBootApplication
-@ComponentScan(value = "edu.hubu", excludeFilters = @ComponentScan.Filter(type = FilterType.CUSTOM, value = {ScanFilter.class}))
-public class AwardApplication implements CommandLineRunner {
+@ComponentScan(value = "edu.hubu", excludeFilters = @ComponentScan.Filter(type = FilterType.CUSTOM, value = {
+        ScanFilter.class }))
+public class Application implements CommandLineRunner {
     public static void main(String[] args) {
-        SpringApplication.run(AwardApplication.class, args);
+        SpringApplication.run(Application.class, args);
     }
 
     @Autowired
@@ -35,9 +36,11 @@ public class AwardApplication implements CommandLineRunner {
                 String fileName = file.getName();
                 if (fileName.endsWith(".csv")) {
                     String modelName = fileName.substring(0, fileName.length() - 4);
-                    @SuppressWarnings("rawtypes") var dao = (MongoDao) appContext.getBean(modelName + "MongoDao");
+                    @SuppressWarnings("rawtypes")
+                    var dao = (MongoDao) appContext.getBean(modelName + "MongoDao");
                     var collection = dao.input(getClass().getResourceAsStream("/data/" + fileName));
-                    if (collection.size() > 0) log.info("import " + collection.size() + " " + modelName);
+                    if (collection.size() > 0)
+                        log.info("import " + collection.size() + " " + modelName);
                 }
             }
         }

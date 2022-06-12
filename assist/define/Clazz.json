@@ -1,0 +1,38 @@
+{
+  "description": "班级",
+  "fields": [
+    {
+      "name": "Name",
+      "type": "string",
+      "description": "名称",
+      "search": "like",
+      "show": true
+    },
+    {
+      "name": "Department",
+      "type": "string",
+      "description": "系部",
+      "search": "equal",
+      "show": true
+    },
+    {
+      "name": "Head",
+      "type": "string",
+      "description": "班主任",
+      "search": "equal",
+      "show": true
+    },
+    {
+      "name": "Year",
+      "type": "int",
+      "description": "年级",
+      "search": "equal",
+      "show": true
+    },
+    {
+      "name": "Remark",
+      "type": "string",
+      "description": "备注"
+    }
+  ]
+}

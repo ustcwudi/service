@@ -27,9 +27,11 @@ export default (props: { children: any }) => {
     <>
       <Nav menu={topMenu} menuChanged={(id) => setLeftMenu(menu.filter((i) => i.parent === id))} />
       <div style={{ display: 'flex', height: '100%' }}>
-        <div style={{ flex: 0, padding: '76px 10px 10px' }}>
-          <Menu menu={leftMenu} />
-        </div>
+        {leftMenu.length > 0 && (
+          <div style={{ flex: 0, padding: '76px 10px 10px' }}>
+            <Menu menu={leftMenu} />
+          </div>
+        )}
         <div style={{ flex: 1, padding: '86px 20px 20px', backgroundColor: '#eee' }}>
           <div style={{ flex: 'auto', height: '100%' }}>{props.children}</div>
         </div>

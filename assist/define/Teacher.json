@@ -1,0 +1,31 @@
+{
+  "description": "人员",
+  "fields": [
+    {
+      "name": "Name",
+      "type": "string",
+      "description": "姓名",
+      "search": "like",
+      "show": true
+    },
+    {
+      "name": "Code",
+      "type": "string",
+      "description": "工号",
+      "search": "equal",
+      "show": true
+    },
+    {
+      "name": "Department",
+      "type": "string",
+      "description": "系部",
+      "search": "equal",
+      "show": true
+    },
+    {
+      "name": "Remark",
+      "type": "string",
+      "description": "备注"
+    }
+  ]
+}
