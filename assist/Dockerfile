@@ -4,7 +4,7 @@ ENV GRADLE_VERSION 3.2
 
 WORKDIR /
 RUN apk update && \
-    apk add git nodejs npm curl unzip && \
+    apk add git nodejs npm curl unzip openjdk11 && \
     git clone --depth=1 https://github.com/ustcwudi/service && \
     curl https://downloads.gradle.org/distributions/gradle-${GRADLE_VERSION}-bin.zip > gradle.zip && \
     unzip gradle.zip
