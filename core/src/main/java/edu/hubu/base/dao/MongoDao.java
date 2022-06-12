@@ -68,8 +68,16 @@ public abstract class MongoDao<T extends Model, Q extends QueryRequest> {
     public void link(String link, List<T> list) {
     }
 
+    public T findOne(String id) {
+        return findOne(id, new String[] {});
+    }
+
     public T findOne(String id, String[] links) {
         return findOne(new Query().addCriteria(Criteria.where("id").is(id)), links);
+    }
+
+    public T findOne(Query query) {
+        return findOne(query, new String[] {});
     }
 
     public T findOne(Query query, String[] links) {
@@ -78,6 +86,10 @@ public abstract class MongoDao<T extends Model, Q extends QueryRequest> {
             return result.get(0);
         else
             return null;
+    }
+
+    public List<T> find() {
+        return find(new Query(), new String[] {});
     }
 
     public List<T> find(String[] links) {

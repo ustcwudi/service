@@ -16,7 +16,7 @@ import Switch from '@mui/material/Switch'
 
 export const tableColumns = function (): TableColumn<${model.name}>[] {
   return [
-<#list model.fields as field>
+<#list model.fields as field><#if field.show>
     {
       title: '${field.description}',
       key: '${c(field.name)}',
@@ -32,7 +32,7 @@ export const tableColumns = function (): TableColumn<${model.name}>[] {
       render: (props) => <>{props.value.${c(field.name)}}</>,
       </#if>
     },
-</#list>
+</#if></#list>
   ]
 }
 

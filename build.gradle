@@ -32,6 +32,7 @@ subprojects {
     dependencies {
         implementation 'io.minio:minio:8.2.2'
         implementation 'com.auth0:java-jwt:3.18.2'
+        implementation 'com.alibaba:fastjson:1.2.83'
         implementation 'com.github.penggle:kaptcha:2.3.2'
         implementation 'io.springfox:springfox-boot-starter:3.0.0'
         implementation 'org.springframework.boot:spring-boot-starter-web'
