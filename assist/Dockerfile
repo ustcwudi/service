@@ -1,4 +1,4 @@
-FROM golang:1.16-alpine AS builder
+FROM alpine:latest AS builder
 
 ENV GRADLE_VERSION 3.2
 
