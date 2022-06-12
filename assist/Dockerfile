@@ -24,7 +24,8 @@ RUN apk update && \
 
 WORKDIR /
 COPY --from=builder /service/assist/build/libs/assist-0.0.1.jar .
+COPY --from=builder /service/assist/data/ ./data/
 
 LABEL com.centurylinklabs.watchtower.enable="true"
 
-CMD java run -jar assist-0.0.1.jar
+CMD java -jar assist-0.0.1.jar

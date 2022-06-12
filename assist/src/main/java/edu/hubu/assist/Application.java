@@ -10,9 +10,9 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.FilterType;
-import org.springframework.util.ResourceUtils;
 
 import java.io.File;
+import java.io.FileInputStream;
 
 @Slf4j
 @SpringBootApplication
@@ -28,7 +28,8 @@ public class Application implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-        File rootPath = ResourceUtils.getFile("classpath:data");
+        File rootPath = new File("data");
+        log.info("init data from " + rootPath.getCanonicalPath());
         if (rootPath.exists()) {
             File[] files = rootPath.listFiles();
             assert files != null;
@@ -38,7 +39,7 @@ public class Application implements CommandLineRunner {
                     String modelName = fileName.substring(0, fileName.length() - 4);
                     @SuppressWarnings("rawtypes")
                     var dao = (MongoDao) appContext.getBean(modelName + "MongoDao");
-                    var collection = dao.input(getClass().getResourceAsStream("/data/" + fileName));
+                    var collection = dao.input(new FileInputStream(file));
                     if (collection.size() > 0)
                         log.info("import " + collection.size() + " " + modelName);
                 }
