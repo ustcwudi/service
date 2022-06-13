@@ -11,7 +11,7 @@ RUN ./gradlew :generator:bootRun --args=assist
 
 WORKDIR /service/web
 RUN npm install && npm run build
-RUN mv /service/web/dist /service/assist/src/main/resources/static
+RUN mv /service/web/dist/* /service/assist/src/main/resources/static
 
 WORKDIR /service
 RUN ./gradlew :assist:build
@@ -22,7 +22,7 @@ RUN apk update && \
 
 WORKDIR /
 COPY --from=builder /service/assist/build/libs/assist-0.0.1.jar .
-COPY --from=builder /service/assist/data/* ./data/
+COPY --from=builder /service/assist/data/ ./data/
 
 LABEL com.centurylinklabs.watchtower.enable="true"
 
