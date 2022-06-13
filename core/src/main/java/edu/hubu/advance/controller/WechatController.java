@@ -9,6 +9,8 @@ import edu.hubu.security.Token;
 import edu.hubu.security.TokenService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import lombok.extern.slf4j.Slf4j;
+
 import com.alibaba.fastjson.JSONObject;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,6 +29,7 @@ import javax.servlet.http.HttpServletResponse;
 @RestController
 @RequestMapping("/api/wechat")
 @Api(tags = "微信")
+@Slf4j
 public class WechatController {
 
     @Autowired
@@ -45,7 +48,7 @@ public class WechatController {
         var url = new URL(
                 "https://api.weixin.qq.com/sns/jscode2session?appid=" + wechatConfiguration.getId()
                         + "&secret=" + wechatConfiguration.getSecret()
-                        + "&js_code=JSCODE&grant_type=" + code);
+                        + "&js_code=" + code + "&grant_type=authorization_code");
         var connection = url.openConnection();
         connection.connect();
         var reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
@@ -55,6 +58,7 @@ public class WechatController {
             lines += line;
             line = reader.readLine();
         }
+        log.debug(lines);
         var json = JSONObject.parseObject(lines);
         if (json.getIntValue("errcode") == 0) {
             var user = userMongoDao
