@@ -61,9 +61,10 @@ public class WechatController {
         log.debug(lines);
         var json = JSONObject.parseObject(lines);
         if (json.getIntValue("errcode") == 0) {
+            String[] links = link == null ? new String[] {} : link.split(",");
             var user = userMongoDao
                     .findOne(new Query().addCriteria(Criteria.where("openIdentify").is(json.getString("openid"))),
-                            link.split(","));
+                            links);
             if (user == null) {
                 user = new User();
                 user.setOpenIdentify(json.getString("openid"));

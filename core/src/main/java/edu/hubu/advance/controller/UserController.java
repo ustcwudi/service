@@ -69,7 +69,9 @@ public class UserController extends edu.hubu.auto.controller.UserController {
 
     @GetMapping("info")
     @ApiOperation("个人信息")
-    public Result info(@ApiIgnore Token token) {
-        return Result.ok(userMongoDao.findOne(token.getUid(), new String[] { "role" }));
+    public Result info(@ApiIgnore Token token,
+            @RequestHeader(value = "link", required = false) String link) {
+        String[] links = link == null ? new String[] {} : link.split(",");
+        return Result.ok(userMongoDao.findOne(token.getUid(), links));
     }
 }
