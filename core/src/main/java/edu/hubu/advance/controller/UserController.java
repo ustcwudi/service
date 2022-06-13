@@ -34,8 +34,9 @@ public class UserController extends edu.hubu.auto.controller.UserController {
 
     @Data
     static class LoginForm {
-        @NotEmpty(message = "用户名不能为空")
+        @NotEmpty(message = "账号不能为空")
         private String account;
+        @NotEmpty(message = "密码不能为空")
         private String password;
         private Boolean remember;
         @CaptchaValid
