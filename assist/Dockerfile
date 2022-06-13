@@ -18,7 +18,7 @@ RUN ./gradlew :assist:build
 
 FROM alpine:latest AS final
 RUN apk update && \
-    apk add openjdk11-jre
+    apk add openjdk11-jre ttf-dejavu fontconfig
 
 WORKDIR /
 COPY --from=builder /service/assist/build/libs/assist-0.0.1.jar .
