@@ -12,8 +12,8 @@ import org.springframework.web.bind.annotation.*;
 @Api(tags = "微信")
 public class WechatController extends edu.hubu.advance.controller.WechatController {
     @Override
-    public User getUser(String[] links, JSONObject json, JSONObject form) {
-        var user = super.getUser(links, json, form);
+    public User newUser(JSONObject json, JSONObject form) {
+        var user = super.newUser(json, form);
         user.setAccount(form.getString("account"));
         user.setName(form.getString("name"));
         user.setRole((form.getIntValue("type") == 0 ? "000000000000000000000001" : "000000000000000000000002"));
