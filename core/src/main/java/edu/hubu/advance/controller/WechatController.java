@@ -9,7 +9,6 @@ import edu.hubu.security.Token;
 import edu.hubu.security.TokenService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 
 import com.alibaba.fastjson.JSONObject;
@@ -26,8 +25,6 @@ import java.net.URL;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
-import javax.validation.Valid;
-import javax.validation.constraints.NotEmpty;
 
 @RestController
 @RequestMapping("/api/wechat")
@@ -44,25 +41,26 @@ public class WechatController {
     @Autowired
     private MongoDao<User, UserQuery> userMongoDao;
 
-    @Data
-    static class LoginForm {
-        @NotEmpty(message = "账号不能为空")
-        private String account;
-        @NotEmpty(message = "姓名不能为空")
-        private String name;
-        @NotEmpty(message = "代码不能为空")
-        private String code;
-        private Integer type;
+    public User getUser(String[] links, JSONObject json, JSONObject form) {
+        var user = userMongoDao
+                .findOne(new Query().addCriteria(Criteria.where("openIdentify").is(json.getString("openid"))),
+                        links);
+        if (user == null) {
+            user = new User();
+            user.setOpenIdentify(json.getString("openid"));
+            user.setUnionIdentify(json.getString("unionid"));
+        }
+        return user;
     }
 
     @GetMapping("login")
     @ApiOperation("登录")
-    public Result login(@ApiIgnore HttpServletResponse response, @Valid @RequestBody LoginForm form,
+    public Result login(@ApiIgnore HttpServletResponse response, @RequestBody JSONObject form,
             @RequestHeader(value = "link", required = false) String link) throws Exception {
         var url = new URL(
                 "https://api.weixin.qq.com/sns/jscode2session?appid=" + wechatConfiguration.getId()
                         + "&secret=" + wechatConfiguration.getSecret()
-                        + "&js_code=" + form.getCode() + "&grant_type=authorization_code");
+                        + "&js_code=" + form.getString("code") + "&grant_type=authorization_code");
         var connection = url.openConnection();
         connection.connect();
         var reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
@@ -76,18 +74,8 @@ public class WechatController {
         var json = JSONObject.parseObject(lines);
         if (json.getIntValue("errcode") == 0) {
             String[] links = link == null ? new String[] {} : link.split(",");
-            var user = userMongoDao
-                    .findOne(new Query().addCriteria(Criteria.where("openIdentify").is(json.getString("openid"))),
-                            links);
-            if (user == null) {
-                user = new User();
-                user.setAccount(form.getAccount());
-                user.setName(form.getName());
-                user.setOpenIdentify(json.getString("openid"));
-                user.setUnionIdentify(json.getString("unionid"));
-                user.setRole(form.getType() == 0 ? "000000000000000000000001" : "000000000000000000000002");
-                userMongoDao.add(user);
-            }
+            var user = getUser(links, json, form);
+            userMongoDao.add(user);
             // token
             var token = new Token();
             token.setUid(user.getId());
