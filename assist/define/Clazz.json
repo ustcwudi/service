@@ -10,7 +10,8 @@
     },
     {
       "name": "Department",
-      "type": "string",
+      "type": "id",
+      "link": "Department",
       "description": "系部",
       "search": "equal",
       "show": true

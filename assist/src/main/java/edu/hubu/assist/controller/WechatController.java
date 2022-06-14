@@ -38,6 +38,7 @@ public class WechatController extends edu.hubu.advance.controller.WechatControll
                 if (teacher != null) {
                     user.setRole("000000000000000000000001");
                     user.setCollege(teacher.getCollege());
+                    user.setDepartment(teacher.getDepartment());
                 } else
                     return null;
             } else if (type == 1) {
@@ -46,6 +47,7 @@ public class WechatController extends edu.hubu.advance.controller.WechatControll
                 if (student != null) {
                     user.setRole("000000000000000000000002");
                     user.setCollege(student.getCollege());
+                    user.setDepartment(student.getDepartment());
                 } else
                     return null;
             } else {
