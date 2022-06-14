@@ -28,7 +28,7 @@ public class WechatController extends edu.hubu.advance.controller.WechatControll
         var user = super.newUser(json, form);
         var account = form.getString("account");
         var name = form.getString("name");
-        var type = form.getIntValue("type");
+        var type = form.getInteger("type");
         if (name != null && !name.isEmpty() && account != null && !account.isEmpty() && type >= 0 && type <= 1) {
             user.setAccount(account);
             user.setName(form.getString("name"));
