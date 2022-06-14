@@ -12,12 +12,14 @@ import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
+import org.springframework.web.multipart.MultipartFile;
 
 import edu.hubu.base.Model;
 import edu.hubu.base.web.QueryRequest;
@@ -42,17 +44,33 @@ public abstract class MongoDao<T extends Model, Q extends QueryRequest> {
     @Autowired
     private MongoTemplate mongoTemplate;
 
-    public abstract Collection<T> input(InputStream steam);
+    public abstract Collection<T> input(List<List<String>> matrix);
 
-    protected List<List<String>> filter(InputStream input) {
-        var output = new ArrayList<List<String>>();
+    public Collection<T> input(MultipartFile file) throws Exception {
+        var book = new XSSFWorkbook(file.getInputStream());
+        var sheet = book.getSheetAt(0);
+        var matrix = new ArrayList<List<String>>();
+        for (int i = 0; i <= sheet.getLastRowNum(); i++) {
+            var row = sheet.getRow(i);
+            var cells = new ArrayList<String>();
+            for (int j = 0; j < row.getLastCellNum(); j++) {
+                cells.add(row.getCell(j).toString());
+            }
+            matrix.add(cells);
+        }
+        book.close();
+        return input(matrix);
+    }
+
+    public Collection<T> input(InputStream stream) {
+        var matrix = new ArrayList<List<String>>();
         try {
-            var reader = new BufferedReader(new InputStreamReader(input, "UTF-8"));
-            if (input != null && count() == 0) {
+            var reader = new BufferedReader(new InputStreamReader(stream, "UTF-8"));
+            if (stream != null && count() == 0) {
                 try {
                     String line = null;
                     while ((line = reader.readLine()) != null) {
-                        output.add(List.of(line.split(",")));
+                        matrix.add(List.of(line.split(",")));
                     }
                 } catch (IOException ioe) {
                     System.out.println(ioe.getMessage());
@@ -62,7 +80,7 @@ public abstract class MongoDao<T extends Model, Q extends QueryRequest> {
             log.error(e.getMessage());
             e.printStackTrace();
         }
-        return output;
+        return input(matrix);
     }
 
     public void link(String link, List<T> list) {

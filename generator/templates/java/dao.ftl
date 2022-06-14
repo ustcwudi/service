@@ -23,8 +23,7 @@ public class ${model.name}MongoDao extends MongoDao<${model.name}, ${model.name}
     }
 
     @Override
-    public Collection<${model.name}> input(InputStream steam) {
-        var matrix = filter(steam);
+    public Collection<${model.name}> input(List<List<String>> matrix) {
         var modelList = new ArrayList<${model.name}>();
         List<String> header = null;
         for (List<String> line : matrix) {

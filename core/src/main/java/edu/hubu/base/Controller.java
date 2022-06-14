@@ -6,6 +6,8 @@ import edu.hubu.base.web.UpdateRequest;
 import edu.hubu.security.Token;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
 import springfox.documentation.annotations.ApiIgnore;
 
 import java.util.Collection;
@@ -107,5 +109,20 @@ public class Controller<T extends Model, Q extends QueryRequest> {
     @ApiOperation("修改")
     public Result update(@ApiIgnore Token token, @RequestBody UpdateRequest<T, Q> r) {
         return Result.ok(mongoDao.update(r.getWhere(), r.getUpdate()));
+    }
+
+    @PostMapping(value = "/upload")
+    @ApiOperation("导入")
+    public Result upload(@ApiIgnore Token token, @RequestPart("file") MultipartFile file) throws Exception {
+        if (file.isEmpty()) {
+            return Result.fail("空文件");
+        }
+        String fileName = file.getOriginalFilename();
+        String suffix = fileName.substring(fileName.lastIndexOf("."));
+        if (suffix.equals(".xlsx")) {
+            return Result.ok(mongoDao.input(file));
+        } else {
+            return Result.fail("文件类型错误");
+        }
     }
 }

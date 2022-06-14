@@ -1,4 +1,5 @@
 import * as React from 'react'
+import Box from '@mui/material/Box'
 import Toolbar from '@mui/material/Toolbar'
 import Typography from '@mui/material/Typography'
 import IconButton from '@mui/material/IconButton'
@@ -11,10 +12,15 @@ import DeleteTwoToneIcon from '@mui/icons-material/DeleteTwoTone'
 import RestoreIcon from '@mui/icons-material/Restore'
 import CancelIcon from '@mui/icons-material/Cancel'
 import AddIcon from '@mui/icons-material/Add'
+import InsertDriveFileOutlinedIcon from '@mui/icons-material/InsertDriveFileOutlined'
+import Upload from '../input/upload'
+import Xlsx from 'js-export-excel'
 import { alpha } from '@mui/material/styles'
 
 interface Props {
   title: string
+  uploadUrl: string
+  templateHeader: string[]
   totalSelected: number
   query: Record<string, any>
   onCommand: (type: string, parameter?: any) => void
@@ -22,6 +28,19 @@ interface Props {
 }
 export default (props: Props) => {
   const { totalSelected } = props
+
+  const toExcel = () => {
+    let option: any = {}
+    option.fileName = props.title + '模板'
+    option.datas = [
+      {
+        sheetData: [],
+        sheetName: '模板',
+        sheetHeader: props.templateHeader,
+      },
+    ]
+    new Xlsx(option).saveExcel()
+  }
 
   return (
     <Toolbar
@@ -75,11 +94,23 @@ export default (props: Props) => {
             </IconButton>
           </Tooltip>
           {!props.garbage && (
-            <Tooltip title="新增">
-              <IconButton onClick={() => props.onCommand('add')}>
-                <AddIcon />
-              </IconButton>
-            </Tooltip>
+            <>
+              <Tooltip title="新增">
+                <IconButton onClick={() => props.onCommand('add')}>
+                  <AddIcon />
+                </IconButton>
+              </Tooltip>
+              <Tooltip title="模板">
+                <IconButton onClick={toExcel}>
+                  <InsertDriveFileOutlinedIcon />
+                </IconButton>
+              </Tooltip>
+              <Tooltip title="上传">
+                <Box>
+                  <Upload url={props.uploadUrl} onComplete={() => props.onCommand('refresh')}></Upload>
+                </Box>
+              </Tooltip>
+            </>
           )}
           <Tooltip title={props.garbage ? '退出回收站' : '进入回收站'}>
             <IconButton onClick={() => props.onCommand('garbage')}>{props.garbage ? <DeleteTwoToneIcon /> : <DeleteOutlineTwoToneIcon />}</IconButton>

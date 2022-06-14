@@ -47,7 +47,11 @@ export default <T extends Model, Q extends QueryModel>(props: Props<T, Q>) => {
   const [order, setOrder] = React.useState<{ key: keyof T; direction: 'asc' | 'desc' }>({ key: 'id', direction: 'desc' })
 
   const queryRequest = useRequest(
-    () => request.post(`/api/${props.table}/query/${order.key}/${order.direction}/${pagination.page}/${pagination.pageSize}`, { data: { ...query, trash: garbage }, headers: { link: props.link } }),
+    () =>
+      request.post(`/api/${props.table}/query/${order.key as string}/${order.direction}/${pagination.page}/${pagination.pageSize}`, {
+        data: { ...query, trash: garbage },
+        headers: { link: props.link },
+      }),
     {
       refreshDeps: [pagination, order, query, garbage],
       onSuccess: (data) => {
@@ -125,6 +129,9 @@ export default <T extends Model, Q extends QueryModel>(props: Props<T, Q>) => {
       case 'unquery':
         setQuery({} as Q)
         break
+      case 'refresh':
+        setQuery({ ...query })
+        break
       case 'trash':
         request.put(`/api/${props.table}/trash`, { data: { id: selected } }).then((result) => {
           if (result.data === selected.length) {
@@ -175,7 +182,15 @@ export default <T extends Model, Q extends QueryModel>(props: Props<T, Q>) => {
 
   return (
     <Paper>
-      <Toolbar title={props.title} garbage={garbage} query={query} totalSelected={selected.length} onCommand={onCommand} />
+      <Toolbar
+        templateHeader={props.tableColumns.map((i) => i.title)}
+        uploadUrl={`/api/${props.table}/upload`}
+        title={props.title}
+        garbage={garbage}
+        query={query}
+        totalSelected={selected.length}
+        onCommand={onCommand}
+      />
       <TableContainer>
         <Table sx={{ minWidth: 1200 }}>
           {/* 表头 */}

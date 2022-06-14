@@ -40,15 +40,19 @@ public class TokenCheck {
         var arguments = joinPoint.getArgs();
         for (int i = 0; i < arguments.length; i++) {
             if (arguments[i] instanceof Token) {
-                HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
+                HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes())
+                        .getRequest();
                 redisDao.set("url", request.getRequestURI(), 10000);
                 var cookies = request.getCookies();
+                if (cookies == null)
+                    return Result.fail("用户未登录");
                 for (var cookie : cookies) {
                     if (cookie.getName().equals("jwt")) {
                         try {
                             var token = tokenService.decode(cookie.getValue());
                             arguments[i] = token;
-                            log.info(token.getAccount() + ":" + token.getUid() + ":" + request.getMethod() + ":" + request.getRequestURI());
+                            log.info(token.getAccount() + ":" + token.getUid() + ":" + request.getMethod() + ":"
+                                    + request.getRequestURI());
                             return joinPoint.proceed(arguments);
                         } catch (AlgorithmMismatchException e) {
                             log.error(e.getMessage());
