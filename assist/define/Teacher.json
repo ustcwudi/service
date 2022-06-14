@@ -23,6 +23,12 @@
       "show": true
     },
     {
+      "name": "College",
+      "type": "string",
+      "description": "学院",
+      "search": "equal"
+    },
+    {
       "name": "Remark",
       "type": "string",
       "description": "备注"

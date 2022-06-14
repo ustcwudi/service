@@ -33,18 +33,20 @@ public class WechatController extends edu.hubu.advance.controller.WechatControll
             user.setAccount(account);
             user.setName(form.getString("name"));
             if (type == 0) {
-                var count = teacherMongoDao.count(new Query()
+                var teacher = teacherMongoDao.findOne(new Query()
                         .addCriteria(Criteria.where("name").is(name).andOperator(Criteria.where("code").is(account))));
-                if (count == 1)
+                if (teacher != null) {
                     user.setRole("000000000000000000000001");
-                else
+                    user.setCollege(teacher.getCollege());
+                } else
                     return null;
             } else if (type == 1) {
-                var count = studentMongoDao.count(new Query()
+                var student = studentMongoDao.findOne(new Query()
                         .addCriteria(Criteria.where("name").is(name).andOperator(Criteria.where("code").is(account))));
-                if (count == 1)
+                if (student != null) {
                     user.setRole("000000000000000000000002");
-                else
+                    user.setCollege(student.getCollege());
+                } else
                     return null;
             } else {
                 return null;

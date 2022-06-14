@@ -1,0 +1,11 @@
+{
+  "description": "用户",
+  "fields": [
+    {
+      "name": "College",
+      "type": "string",
+      "description": "学院",
+      "search": "equal"
+    }
+  ]
+}

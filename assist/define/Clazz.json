@@ -16,6 +16,12 @@
       "show": true
     },
     {
+      "name": "College",
+      "type": "string",
+      "description": "学院",
+      "search": "equal"
+    },
+    {
       "name": "Head",
       "type": "string",
       "description": "班主任",
