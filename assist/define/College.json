@@ -1,0 +1,22 @@
+{
+  "description": "学院",
+  "fields": [
+    {
+      "name": "Name",
+      "type": "string",
+      "description": "名称",
+      "search": "like",
+      "show": true
+    },
+    {
+      "name": "Image",
+      "type": "string",
+      "description": "背景图片"
+    },
+    {
+      "name": "Remark",
+      "type": "string",
+      "description": "备注"
+    }
+  ]
+}

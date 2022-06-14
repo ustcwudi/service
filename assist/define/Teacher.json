@@ -24,7 +24,8 @@
     },
     {
       "name": "College",
-      "type": "string",
+      "type": "id",
+      "link": "College",
       "description": "学院",
       "search": "equal"
     },
