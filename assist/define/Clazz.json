@@ -38,6 +38,12 @@
       "show": true
     },
     {
+      "name": "Count",
+      "type": "int",
+      "description": "人数",
+      "show": true
+    },
+    {
       "name": "Remark",
       "type": "string",
       "description": "备注"

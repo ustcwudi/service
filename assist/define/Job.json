@@ -1,0 +1,38 @@
+{
+  "description": "工作量",
+  "fields": [
+    {
+      "name": "Name",
+      "type": "string",
+      "description": "名称",
+      "search": "like",
+      "show": true
+    },
+    {
+      "name": "Quantity",
+      "type": "int",
+      "description": "数量",
+      "show": true
+    },
+    {
+      "name": "Teacher",
+      "type": "string",
+      "description": "教师",
+      "search": "equal",
+      "show": true
+    },
+    {
+      "name": "College",
+      "type": "id",
+      "link": "College",
+      "description": "学院",
+      "search": "equal"
+    },
+    {
+      "name": "Remark",
+      "type": "string",
+      "description": "说明",
+      "show": true
+    }
+  ]
+}

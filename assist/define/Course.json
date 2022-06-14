@@ -1,46 +1,42 @@
 {
-  "description": "学生",
+  "description": "课程",
   "fields": [
     {
       "name": "Name",
       "type": "string",
-      "description": "姓名",
+      "description": "名称",
       "search": "like",
+      "show": true
+    },
+    {
+      "name": "Type",
+      "type": "string",
+      "description": "属性",
+      "search": "equal",
+      "show": true
+    },
+    {
+      "name": "Score",
+      "type": "int",
+      "description": "学分",
+      "show": true
+    },
+    {
+      "name": "Duration",
+      "type": "int",
+      "description": "学时",
+      "show": true
+    },
+    {
+      "name": "Count",
+      "type": "int",
+      "description": "人数",
       "show": true
     },
     {
       "name": "Teacher",
       "type": "string",
-      "description": "导师",
-      "search": "equal",
-      "show": true
-    },
-    {
-      "name": "Code",
-      "type": "string",
-      "description": "学号",
-      "search": "equal",
-      "show": true
-    },
-    {
-      "name": "Major",
-      "type": "string",
-      "description": "专业",
-      "search": "equal",
-      "show": true
-    },
-    {
-      "name": "Year",
-      "type": "int",
-      "description": "年级",
-      "search": "equal",
-      "show": true
-    },
-    {
-      "name": "Department",
-      "type": "id",
-      "link": "Department",
-      "description": "系部",
+      "description": "教师",
       "search": "equal",
       "show": true
     },
@@ -54,7 +50,8 @@
     {
       "name": "Remark",
       "type": "string",
-      "description": "备注"
+      "description": "备注",
+      "show": true
     }
   ]
 }
