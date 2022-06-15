@@ -15,6 +15,13 @@
       "show": true
     },
     {
+      "name": "Term",
+      "type": "string",
+      "description": "学期",
+      "search": "equal",
+      "show": true
+    },
+    {
       "name": "Teacher",
       "type": "string",
       "description": "教师",
