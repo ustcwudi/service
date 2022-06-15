@@ -26,7 +26,8 @@
       "type": "id",
       "link": "College",
       "description": "学院",
-      "search": "equal"
+      "search": "equal",
+      "show": true
     },
     {
       "name": "Remark",

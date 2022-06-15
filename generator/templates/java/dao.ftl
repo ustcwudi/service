@@ -48,7 +48,7 @@ public class ${model.name}MongoDao extends MongoDao<${model.name}, ${model.name}
                     <#elseif field.type == "bool">
                         model.set${field.name}(Boolean.getBoolean(span));
                     <#elseif field.type == "int">
-                        model.set${field.name}(Integer.parseInt(span));
+                        model.set${field.name}(Math.round(Float.parseFloat(span)));
                     <#elseif field.type == "float">
                         model.set${field.name}(Float.parseFloat(span));
                     <#elseif field.type == "int[]">

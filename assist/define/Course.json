@@ -9,6 +9,13 @@
       "show": true
     },
     {
+      "name": "Clazz",
+      "type": "string",
+      "description": "班级",
+      "search": "like",
+      "show": true
+    },
+    {
       "name": "Type",
       "type": "string",
       "description": "属性",
@@ -45,7 +52,8 @@
       "type": "id",
       "link": "College",
       "description": "学院",
-      "search": "equal"
+      "search": "equal",
+      "show": true
     },
     {
       "name": "Remark",

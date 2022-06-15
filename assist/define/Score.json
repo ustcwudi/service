@@ -1,47 +1,42 @@
 {
-  "description": "学生",
+  "description": "工作量",
   "fields": [
     {
       "name": "Name",
       "type": "string",
-      "description": "姓名",
+      "description": "名称",
       "search": "like",
       "show": true
     },
     {
       "name": "Teacher",
       "type": "string",
-      "description": "导师",
+      "description": "教师",
       "search": "equal",
       "show": true
     },
     {
-      "name": "Code",
-      "type": "string",
-      "description": "学号",
-      "search": "equal",
+      "name": "Student",
+      "type": "float",
+      "description": "学生评价",
       "show": true
     },
     {
-      "name": "Major",
-      "type": "string",
-      "description": "专业",
-      "search": "equal",
+      "name": "Peer",
+      "type": "float",
+      "description": "同行评价",
       "show": true
     },
     {
-      "name": "Year",
-      "type": "int",
-      "description": "年级",
-      "search": "equal",
+      "name": "Manager",
+      "type": "float",
+      "description": "管理评价",
       "show": true
     },
     {
-      "name": "Department",
-      "type": "id",
-      "link": "Department",
-      "description": "系部",
-      "search": "equal",
+      "name": "Total",
+      "type": "float",
+      "description": "总评价",
       "show": true
     },
     {
@@ -55,7 +50,8 @@
     {
       "name": "Remark",
       "type": "string",
-      "description": "备注"
+      "description": "说明",
+      "show": true
     }
   ]
 }
