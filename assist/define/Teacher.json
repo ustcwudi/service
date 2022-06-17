@@ -16,14 +16,6 @@
       "show": true
     },
     {
-      "name": "Department",
-      "type": "id",
-      "link": "Department",
-      "description": "系部",
-      "search": "equal",
-      "show": true
-    },
-    {
       "name": "College",
       "type": "id",
       "link": "College",

@@ -16,6 +16,12 @@
       "show": true
     },
     {
+      "name": "Rank",
+      "type": "string",
+      "description": "等级",
+      "show": true
+    },
+    {
       "name": "Student",
       "type": "float",
       "description": "学生评价",
