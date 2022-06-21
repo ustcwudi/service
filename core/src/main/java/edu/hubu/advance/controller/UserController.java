@@ -5,7 +5,6 @@ import edu.hubu.auto.request.query.UserQuery;
 import edu.hubu.base.Result;
 import edu.hubu.base.dao.MongoDao;
 import edu.hubu.security.TokenService;
-import edu.hubu.security.Token;
 import edu.hubu.validation.CaptchaValid;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -52,12 +51,11 @@ public class UserController extends edu.hubu.auto.controller.UserController {
         String[] links = link == null ? new String[] {} : link.split(",");
         var user = userMongoDao.findOne(query, links);
         if (user != null) {
-            var token = new Token();
-            token.setUid(user.getId());
-            token.setRid(user.getRole());
-            token.setAccount(user.getAccount());
-            var maxAge = form.getRemember() ? 7 * 24 * 3600 : 8 * 3600;
-            var cookie = new Cookie("jwt", tokenService.encode(token, maxAge));
+            var maxAge = 8 * 3600;
+            if (form.getRemember() != null && form.getRemember()) {
+                maxAge = 7 * 24 * 3600;
+            }
+            var cookie = new Cookie("jwt", tokenService.encode(user, maxAge));
             cookie.setMaxAge(maxAge);
             cookie.setPath("/");
             response.addCookie(cookie);
@@ -69,9 +67,9 @@ public class UserController extends edu.hubu.auto.controller.UserController {
 
     @GetMapping("info")
     @ApiOperation("个人信息")
-    public Result info(@ApiIgnore Token token,
+    public Result info(@ApiIgnore User current,
             @RequestHeader(value = "link", required = false) String link) {
         String[] links = link == null ? new String[] {} : link.split(",");
-        return Result.ok(userMongoDao.findOne(token.getUid(), links));
+        return Result.ok(userMongoDao.findOne(current.getId(), links));
     }
 }

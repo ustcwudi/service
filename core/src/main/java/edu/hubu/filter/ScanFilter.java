@@ -18,7 +18,7 @@ public class ScanFilter implements TypeFilter {
     public boolean match(MetadataReader metadataReader, MetadataReaderFactory metadataReaderFactory) {
         AnnotationMetadata annotationMetadata = metadataReader.getAnnotationMetadata();
         String className = annotationMetadata.getClassName();
-        if (className.endsWith("Controller")) {
+        if (className.endsWith("Controller") || className.endsWith("Service")) {
             String shortName = className.substring(className.lastIndexOf(".") + 1);
             if (BeanSet.contains(shortName)) {
                 log.info("exclude " + className);

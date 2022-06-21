@@ -1,7 +1,11 @@
 package edu.hubu.security;
 
 import com.auth0.jwt.JWT;
+import com.auth0.jwt.JWTCreator.Builder;
 import com.auth0.jwt.algorithms.Algorithm;
+import com.auth0.jwt.interfaces.DecodedJWT;
+
+import edu.hubu.auto.model.User;
 import edu.hubu.config.ServiceConfiguration;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -12,23 +16,30 @@ import java.util.Date;
 public class TokenService {
 
     @Autowired
-    private ServiceConfiguration serviceConfiguration;
+    protected ServiceConfiguration serviceConfiguration;
 
-    public String encode(Token token, int maxAge) {
-        return JWT.create().withExpiresAt(new Date(System.currentTimeMillis() + 1000 * maxAge))
-                .withClaim("uid", token.getUid())
-                .withClaim("rid", token.getRid())
-                .withClaim("account", token.getAccount())
-                .sign(Algorithm.HMAC512(serviceConfiguration.getSecret()));
+    protected Builder encode(Builder builder, User user) {
+        return builder
+                .withClaim("id", user.getId())
+                .withClaim("role", user.getRole())
+                .withClaim("account", user.getAccount());
     }
 
-    public Token decode(String jwt) {
+    protected void decode(DecodedJWT jwt, User user) {
+        user.setId(jwt.getClaim("id").asString());
+        user.setRole(jwt.getClaim("role").asString());
+        user.setAccount(jwt.getClaim("account").asString());
+    }
+
+    public String encode(User user, int maxAge) {
+        var builder = JWT.create().withExpiresAt(new Date(System.currentTimeMillis() + 1000 * maxAge));
+        return encode(builder, user).sign(Algorithm.HMAC512(serviceConfiguration.getSecret()));
+    }
+
+    public User decode(String jwt) {
         var decodedJWT = JWT.require(Algorithm.HMAC512(serviceConfiguration.getSecret())).build().verify(jwt);
-        var claims = decodedJWT.getClaims();
-        Token token = new Token();
-        token.setUid(claims.get("uid").asString());
-        token.setRid(claims.get("rid").asString());
-        token.setAccount(claims.get("account").asString());
-        return token;
+        var user = new User();
+        decode(decodedJWT, user);
+        return user;
     }
 }

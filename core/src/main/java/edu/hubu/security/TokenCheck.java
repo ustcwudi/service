@@ -4,6 +4,8 @@ import com.auth0.jwt.exceptions.AlgorithmMismatchException;
 import com.auth0.jwt.exceptions.InvalidClaimException;
 import com.auth0.jwt.exceptions.SignatureVerificationException;
 import com.auth0.jwt.exceptions.TokenExpiredException;
+
+import edu.hubu.auto.model.User;
 import edu.hubu.base.Result;
 import edu.hubu.base.dao.RedisDao;
 import lombok.extern.slf4j.Slf4j;
@@ -31,7 +33,7 @@ public class TokenCheck {
     @Autowired
     private RedisDao redisDao;
 
-    @Pointcut("execution(public * edu.hubu..*Controller.*(edu.hubu.security.Token, ..))")
+    @Pointcut("execution(public * edu.hubu..*Controller.*(edu.hubu.auto.model.User, ..))")
     public void pointcut() {
     }
 
@@ -39,7 +41,7 @@ public class TokenCheck {
     public Object around(ProceedingJoinPoint joinPoint) throws Throwable {
         var arguments = joinPoint.getArgs();
         for (int i = 0; i < arguments.length; i++) {
-            if (arguments[i] instanceof Token) {
+            if (arguments[i] instanceof User) {
                 HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes())
                         .getRequest();
                 redisDao.set("url", request.getRequestURI(), 10000);
@@ -49,9 +51,9 @@ public class TokenCheck {
                 for (var cookie : cookies) {
                     if (cookie.getName().equals("jwt")) {
                         try {
-                            var token = tokenService.decode(cookie.getValue());
-                            arguments[i] = token;
-                            log.info(token.getAccount() + ":" + token.getUid() + ":" + request.getMethod() + ":"
+                            var current = tokenService.decode(cookie.getValue());
+                            arguments[i] = current;
+                            log.info(current.getId() + ":" + request.getMethod() + ":"
                                     + request.getRequestURI());
                             return joinPoint.proceed(arguments);
                         } catch (AlgorithmMismatchException e) {

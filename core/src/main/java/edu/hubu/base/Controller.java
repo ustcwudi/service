@@ -1,9 +1,9 @@
 package edu.hubu.base;
 
+import edu.hubu.auto.model.User;
 import edu.hubu.base.dao.MongoDao;
 import edu.hubu.base.web.QueryRequest;
 import edu.hubu.base.web.UpdateRequest;
-import edu.hubu.security.Token;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -23,7 +23,7 @@ public class Controller<T extends Model, Q extends QueryRequest> {
 
     @PostMapping()
     @ApiOperation("新增")
-    public Result add(@ApiIgnore Token token, @RequestBody T t,
+    public Result add(@ApiIgnore User current, @RequestBody T t,
             @RequestHeader(value = "link", required = false) String link) {
         String[] links = link == null ? new String[] {} : link.split(",");
         return Result.ok(mongoDao.add(t, links));
@@ -31,7 +31,7 @@ public class Controller<T extends Model, Q extends QueryRequest> {
 
     @PostMapping("/multi")
     @ApiOperation("批量新增")
-    public Result add(@ApiIgnore Token token, @RequestBody Collection<T> collection,
+    public Result add(@ApiIgnore User current, @RequestBody Collection<T> collection,
             @RequestHeader(value = "link", required = false) String link) {
         String[] links = link == null ? new String[] {} : link.split(",");
         return Result.ok(mongoDao.add(collection, links));
@@ -39,7 +39,7 @@ public class Controller<T extends Model, Q extends QueryRequest> {
 
     @GetMapping("/id/{id}")
     @ApiOperation("根据ID获取")
-    public Result get(@ApiIgnore Token token, @PathVariable String id,
+    public Result get(@ApiIgnore User current, @PathVariable String id,
             @RequestHeader(value = "link", required = false) String link) {
         String[] links = link == null ? new String[] {} : link.split(",");
         return Result.ok(mongoDao.findOne(id, links));
@@ -47,31 +47,31 @@ public class Controller<T extends Model, Q extends QueryRequest> {
 
     @PutMapping("/id/{id}")
     @ApiOperation("根据ID修改")
-    public Result update(@ApiIgnore Token token, @PathVariable String id, @RequestBody T t) {
+    public Result update(@ApiIgnore User current, @PathVariable String id, @RequestBody T t) {
         return Result.ok(mongoDao.updateOne(id, t));
     }
 
     @PostMapping("/count")
     @ApiOperation("统计")
-    public Result count(@ApiIgnore Token token, @RequestBody Q q) {
+    public Result count(@ApiIgnore User current, @RequestBody Q q) {
         return Result.ok(mongoDao.count(q));
     }
 
     @PutMapping("/trash")
     @ApiOperation("废弃")
-    public Result trash(@ApiIgnore Token token, @RequestBody Q q) {
+    public Result trash(@ApiIgnore User current, @RequestBody Q q) {
         return Result.ok(mongoDao.trash(q));
     }
 
     @PutMapping("/restore")
     @ApiOperation("还原")
-    public Result restore(@ApiIgnore Token token, @RequestBody Q q) {
+    public Result restore(@ApiIgnore User current, @RequestBody Q q) {
         return Result.ok(mongoDao.restore(q));
     }
 
     @PostMapping("/query")
     @ApiOperation("查询")
-    public Result query(@ApiIgnore Token token, @RequestBody Q q,
+    public Result query(@ApiIgnore User current, @RequestBody Q q,
             @RequestHeader(value = "link", required = false) String link) {
         String[] links = link == null ? new String[] {} : link.split(",");
         return Result.ok(mongoDao.find(q, links));
@@ -79,7 +79,7 @@ public class Controller<T extends Model, Q extends QueryRequest> {
 
     @PostMapping("query/{page}/{pageSize}")
     @ApiOperation("分页查询")
-    public Result query(@ApiIgnore Token token, @RequestBody Q q,
+    public Result query(@ApiIgnore User current, @RequestBody Q q,
             @RequestHeader(value = "link", required = false) String link, @PathVariable int page,
             @PathVariable int pageSize) {
         page = page < 0 ? 0 : page;
@@ -90,7 +90,7 @@ public class Controller<T extends Model, Q extends QueryRequest> {
 
     @PostMapping("query/{sort}/{direction}/{page}/{pageSize}")
     @ApiOperation("分页排序查询")
-    public Result query(@ApiIgnore Token token, @RequestBody Q q,
+    public Result query(@ApiIgnore User current, @RequestBody Q q,
             @RequestHeader(value = "link", required = false) String link, @PathVariable int page,
             @PathVariable int pageSize, @PathVariable String sort, @PathVariable String direction) {
         page = page < 0 ? 0 : page;
@@ -101,19 +101,19 @@ public class Controller<T extends Model, Q extends QueryRequest> {
 
     @DeleteMapping()
     @ApiOperation("删除")
-    public Result delete(@ApiIgnore Token token, @RequestBody Q q) {
+    public Result delete(@ApiIgnore User current, @RequestBody Q q) {
         return Result.ok(mongoDao.delete(q));
     }
 
     @PutMapping()
     @ApiOperation("修改")
-    public Result update(@ApiIgnore Token token, @RequestBody UpdateRequest<T, Q> r) {
+    public Result update(@ApiIgnore User current, @RequestBody UpdateRequest<T, Q> r) {
         return Result.ok(mongoDao.update(r.getWhere(), r.getUpdate()));
     }
 
     @PostMapping(value = "/upload")
     @ApiOperation("导入")
-    public Result upload(@ApiIgnore Token token, @RequestPart("file") MultipartFile file) throws Exception {
+    public Result upload(@ApiIgnore User current, @RequestPart("file") MultipartFile file) throws Exception {
         if (file.isEmpty()) {
             return Result.fail("空文件");
         }

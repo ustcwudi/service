@@ -54,7 +54,12 @@ public abstract class MongoDao<T extends Model, Q extends QueryRequest> {
             var row = sheet.getRow(i);
             var cells = new ArrayList<String>();
             for (int j = 0; j < row.getLastCellNum(); j++) {
-                cells.add(row.getCell(j).toString());
+                var cell = row.getCell(j);
+                if (cell != null) {
+                    cells.add(cell.toString());
+                } else {
+                    cells.add("");
+                }
             }
             matrix.add(cells);
         }

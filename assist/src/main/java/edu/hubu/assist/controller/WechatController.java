@@ -24,7 +24,7 @@ public class WechatController extends edu.hubu.advance.controller.WechatControll
     private MongoDao<Student, StudentQuery> studentMongoDao;
 
     @Override
-    public User newUser(JSONObject json, JSONObject form) {
+    protected User newUser(JSONObject json, JSONObject form) {
         var user = super.newUser(json, form);
         var account = form.getString("account");
         var name = form.getString("name");
@@ -39,7 +39,7 @@ public class WechatController extends edu.hubu.advance.controller.WechatControll
                     user.setRole("000000000000000000000001");
                     user.setCollege(teacher.getCollege());
                 } else
-                    return null;
+                    return null; // 没有该教师
             } else if (type == 1) {
                 var student = studentMongoDao.findOne(new Query()
                         .addCriteria(Criteria.where("name").is(name).andOperator(Criteria.where("code").is(account))));
@@ -47,13 +47,13 @@ public class WechatController extends edu.hubu.advance.controller.WechatControll
                     user.setRole("000000000000000000000002");
                     user.setCollege(student.getCollege());
                 } else
-                    return null;
+                    return null; // 没有该学生
             } else {
-                return null;
+                return null; // 类型不正确
             }
             return user;
         } else {
-            return null;
+            return null; // form不正确
         }
     }
 }

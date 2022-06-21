@@ -5,6 +5,7 @@
       "name": "College",
       "type": "id",
       "link": "College",
+      "nullable": true,
       "description": "学院",
       "search": "equal",
       "show": true

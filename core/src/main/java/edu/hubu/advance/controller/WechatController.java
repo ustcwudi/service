@@ -5,7 +5,6 @@ import edu.hubu.auto.request.query.UserQuery;
 import edu.hubu.base.Result;
 import edu.hubu.base.dao.MongoDao;
 import edu.hubu.config.WechatConfiguration;
-import edu.hubu.security.Token;
 import edu.hubu.security.TokenService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -41,7 +40,7 @@ public class WechatController {
     @Autowired
     private MongoDao<User, UserQuery> userMongoDao;
 
-    public User newUser(JSONObject json, JSONObject form) {
+    protected User newUser(JSONObject json, JSONObject form) {
         var user = new User();
         user.setOpenIdentify(json.getString("openid"));
         user.setUnionIdentify(json.getString("unionid"));
@@ -80,12 +79,8 @@ public class WechatController {
                 }
             }
             if (user != null) {
-                var token = new Token();
-                token.setUid(user.getId());
-                token.setRid(user.getRole());
-                token.setAccount(user.getAccount());
                 var maxAge = 8 * 3600;
-                var cookie = new Cookie("jwt", tokenService.encode(token, maxAge));
+                var cookie = new Cookie("jwt", tokenService.encode(user, maxAge));
                 cookie.setMaxAge(maxAge);
                 cookie.setPath("/");
                 response.addCookie(cookie);

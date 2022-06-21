@@ -14,7 +14,6 @@ import edu.hubu.auto.request.query.*;
 import edu.hubu.base.Controller;
 import edu.hubu.base.Result;
 import edu.hubu.base.dao.MongoDao;
-import edu.hubu.security.Token;
 import edu.hubu.service.FileService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -40,13 +39,13 @@ public class ${model.name}Controller extends Controller<${model.name}, ${model.n
 
     @PostMapping(value = "/file/${u(field.name)}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @ApiOperation("上传${field.description}")
-    public String upload${field.name}(@ApiIgnore Token token, @RequestPart("file") MultipartFile file) {
+    public String upload${field.name}(@ApiIgnore User current, @RequestPart("file") MultipartFile file) {
         return fileService.upload(file, "${u(model.name)}/${u(field.name)}/");
     }
 
     @GetMapping("/file/${u(field.name)}/{fileName}")
     @ApiOperation("下载${field.description}")
-    public void download${field.name}(@ApiIgnore Token token, @PathVariable String fileName, @ApiIgnore HttpServletResponse response) throws Exception {
+    public void download${field.name}(@ApiIgnore User current, @PathVariable String fileName, @ApiIgnore HttpServletResponse response) throws Exception {
         var getObjectResponse = fileService.download("${u(model.name)}/${u(field.name)}/", fileName, response);
         response.getOutputStream().write(getObjectResponse.readAllBytes());
         response.getOutputStream().flush();
@@ -56,7 +55,7 @@ public class ${model.name}Controller extends Controller<${model.name}, ${model.n
 
     @GetMapping("/distinct/{field}")
     @ApiOperation("分类")
-    public Result distinct(@ApiIgnore Token token, @PathVariable String field) {
+    public Result distinct(@ApiIgnore User current, @PathVariable String field) {
         switch (field) {
         <#list model.fields as field>
             <#if field.type == "string">
@@ -72,7 +71,7 @@ public class ${model.name}Controller extends Controller<${model.name}, ${model.n
     @GetMapping()
     @ApiOperation("获取")
     public Result get(
-            @ApiIgnore Token token,
+            @ApiIgnore User current,
             @RequestParam(required = false) String id,
             <#list model.fields as field><#assign type = qt(field.type, field.search)><#if type == "String" || type == "Float" || type == "Integer" >
             @RequestParam(required = false) ${type} ${c(field.name)},
