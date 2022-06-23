@@ -247,7 +247,7 @@ export default <T extends Model, Q extends QueryModel>(props: Props<T, Q>) => {
                   showFirstButton
                   showLastButton
                   sx={{ float: 'right', m: 1.5 }}
-                  count={total ? (total - (total % pagination.pageSize)) / pagination.pageSize + 1 : 0}
+                  count={total ? Math.ceil(total / pagination.pageSize) : 0}
                   shape="rounded"
                   page={pagination.page}
                   onChange={(e, page) => setPagination({ ...pagination, page: page })}
