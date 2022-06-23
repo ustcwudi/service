@@ -74,11 +74,11 @@ export default <T extends Model, Q extends QueryModel>(props: Props<T, Q>) => {
     },
   })
 
-  const updateRequest = useRequest((id: string) => request.put(`/api/${props.table}/id/${id}`, { data: candidate, headers: { link: props.link } }), {
+  const updateRequest = useRequest((id: string) => request.put(`/api/${props.table}/one`, { data: { update: candidate, where: { id: [id] } }, headers: { link: props.link } }), {
     manual: true,
     onSuccess: (data, params) => {
       if (data.data == 1) {
-        request.get(`/api/${props.table}/id/${params[0]}`, { headers: { link: props.link } }).then((result) => {
+        request.post(`/api/${props.table}/one`, { data: { id: [params[0]] }, headers: { link: props.link } }).then((result) => {
           let index = tableData.findIndex((i) => i.id === params[0])
           setTableData(tableData.slice(0, index).concat(result.data, tableData.slice(index + 1, tableData.length)))
         })
@@ -184,7 +184,7 @@ export default <T extends Model, Q extends QueryModel>(props: Props<T, Q>) => {
     <Paper>
       <Toolbar
         templateHeader={props.tableColumns.map((i) => i.title)}
-        uploadUrl={`/api/${props.table}/upload`}
+        uploadUrl={`/api/${props.table}/import`}
         title={props.title}
         garbage={garbage}
         query={query}

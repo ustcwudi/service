@@ -99,28 +99,46 @@ public abstract class MongoDao<T extends Model, Q extends QueryRequest> {
         return findOne(new Query().addCriteria(Criteria.where("id").is(id)), links);
     }
 
+    public T findOne(Q q) {
+        return findOne(requestBuilder.buildQuery(q));
+    }
+
+    public T findOne(Q q, String[] links) {
+        return findOne(requestBuilder.buildQuery(q), links);
+    }
+
     public T findOne(Query query) {
         return findOne(query, new String[] {});
     }
 
     public T findOne(Query query, String[] links) {
-        var result = find(query, links);
-        if (result.size() > 0)
-            return result.get(0);
-        else
-            return null;
+        var result = mongoTemplate.findOne(query, clazz);
+        if (result != null) {
+            for (String link : links) {
+                link(link, List.of(result));
+            }
+        }
+        return result;
     }
 
     public List<T> find() {
-        return find(new Query(), new String[] {});
+        return find(new Query());
     }
 
     public List<T> find(String[] links) {
         return find(new Query(), links);
     }
 
+    public List<T> find(Set<String> ids) {
+        return find(new Query().addCriteria(Criteria.where("id").in(ids)));
+    }
+
     public List<T> find(Set<String> ids, String[] links) {
         return find(new Query().addCriteria(Criteria.where("id").in(ids)), links);
+    }
+
+    public List<T> find(Q q) {
+        return find(requestBuilder.buildQuery(q));
     }
 
     public List<T> find(Q q, String[] links) {
@@ -132,9 +150,24 @@ public abstract class MongoDao<T extends Model, Q extends QueryRequest> {
                 .with(Sort.by(Sort.Direction.DESC, "id")), links);
     }
 
+    public List<T> find(Q q, int page, int pageSize) {
+        return find(requestBuilder.buildQuery(q).limit(pageSize).skip(pageSize * (page - 1L))
+                .with(Sort.by(Sort.Direction.DESC, "id")));
+    }
+
+    public List<T> find(Q q, int page, int pageSize, String sort, boolean direction) {
+        return find(requestBuilder.buildQuery(q).limit(pageSize).skip(pageSize * (page - 1L))
+                .with(Sort.by(direction ? Sort.Direction.ASC : Sort.Direction.DESC, sort)));
+    }
+
     public List<T> find(Q q, String[] links, int page, int pageSize, String sort, boolean direction) {
         return find(requestBuilder.buildQuery(q).limit(pageSize).skip(pageSize * (page - 1L))
                 .with(Sort.by(direction ? Sort.Direction.ASC : Sort.Direction.DESC, sort)), links);
+    }
+
+    public List<T> find(Query query) {
+        var result = mongoTemplate.find(query, clazz);
+        return result;
     }
 
     public List<T> find(Query query, String[] links) {

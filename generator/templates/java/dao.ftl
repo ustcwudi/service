@@ -96,7 +96,7 @@ public class ${model.name}MongoDao extends MongoDao<${model.name}, ${model.name}
             }
             modelList.add(model);
         }
-        return add(modelList);
+        return modelList;
     }
 
     @Override

@@ -14,6 +14,7 @@ import edu.hubu.auto.request.query.*;
 import edu.hubu.base.Controller;
 import edu.hubu.base.Result;
 import edu.hubu.base.dao.MongoDao;
+import edu.hubu.security.AuthService;
 import edu.hubu.service.FileService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -26,6 +27,9 @@ import springfox.documentation.annotations.ApiIgnore;
 @RequestMapping("/api/${u(model.name)}")
 @Api(tags = "${model.description}")
 public class ${model.name}Controller extends Controller<${model.name}, ${model.name}Query> {
+
+    @Autowired
+    private AuthService authService;
 
     @Autowired
     public void setMongoDao(MongoDao<${model.name}, ${model.name}Query> dao) {
@@ -88,13 +92,37 @@ public class ${model.name}Controller extends Controller<${model.name}, ${model.n
             query.set${field.name}(${c(field.name)});
         </#if></#list>
         if (page == null && pageSize == null) {
+            authService.restrictQuery(current, "query", query);
             String[] links = link == null ? new String[]{} : link.split(",");
             return Result.ok(mongoDao.find(query, links));
         } else {
+            authService.restrictQuery(current, "query", query);
             page = page == null || page < 0 ? 0 : page;
             pageSize = pageSize == null || pageSize < 1 || pageSize > 100 ? defaultPageSize : pageSize;
             String[] links = link == null ? new String[]{} : link.split(",");
             return Result.ok(mongoDao.find(query, links, page, pageSize));
         }
+    }
+
+    @GetMapping("/one")
+    @ApiOperation("获取单个")
+    public Result get(
+            @ApiIgnore User current,
+            @RequestParam(required = false) String id,
+            <#list model.fields as field><#assign type = qt(field.type, field.search)><#if type == "String" || type == "Float" || type == "Integer" >
+            @RequestParam(required = false) ${type} ${c(field.name)},
+            </#if></#list>
+            @RequestParam(required = false) String link
+    ) {
+        ${model.name}Query query = new ${model.name}Query();
+        if (id != null)
+            query.setId(List.of(id.split(",")));
+        <#list model.fields as field><#assign type = qt(field.type, field.search)><#if type == "String" || type == "Float" || type == "Integer">
+        if (${c(field.name)} != null)
+            query.set${field.name}(${c(field.name)});
+        </#if></#list>
+        authService.restrictQuery(current, "query", query);
+        String[] links = link == null ? new String[]{} : link.split(",");
+        return Result.ok(mongoDao.findOne(query, links));
     }
 }

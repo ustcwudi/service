@@ -32,7 +32,7 @@ export default <T extends Model & { name: string }>(props: Props<T>) => {
 
   React.useEffect(() => {
     if (props.defaultValue) {
-      request.get(`/api/${props.table}/id/${props.defaultValue}`, { useCache: true, ttl: 10 * 60 * 1000, headers: props.link ? { link: props.link } : {} }).then(function (response) {
+      request.get(`/api/${props.table}/one?id=${props.defaultValue}`, { useCache: true, ttl: 10 * 60 * 1000, headers: props.link ? { link: props.link } : {} }).then(function (response) {
         setValue(response.data)
         setOptions([response.data])
       })
