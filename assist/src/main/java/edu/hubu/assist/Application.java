@@ -28,7 +28,7 @@ public class Application implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-        File rootPath = new File("data");
+        File rootPath = new File("assist/data");
         log.info("init data from " + rootPath.getCanonicalPath());
         if (rootPath.exists()) {
             File[] files = rootPath.listFiles();
