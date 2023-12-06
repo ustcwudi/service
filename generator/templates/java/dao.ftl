@@ -65,30 +65,8 @@ public class ${model.name}MongoDao extends MongoDao<${model.name}, ${model.name}
                             result${field.name}.add(Float.parseFloat(element));
                         }
                         model.set${field.name}(result${field.name});
-                    <#elseif field.type == "map[string]string">
-                        Map<String, String> map${field.name} = new HashMap<>();
-                        var pairs${field.name} = span.split(";");
-                        for (var pair : pairs${field.name}) {
-                            var array = pair.split(":");
-                            map${field.name}.put(array[0], array[1]);
-                        }
-                        model.set${field.name}(map${field.name});
-                    <#elseif field.type == "map[string]int">
-                        Map<String, Integer> map${field.name} = new HashMap<>();
-                        var pairs${field.name} = span.split(";");
-                        for (var pair : pairs${field.name}) {
-                            var array = pair.split(":");
-                            map${field.name}.put(array[0], Integer.parseInt(array[1]));
-                        }
-                        model.set${field.name}(map${field.name});
-                    <#elseif field.type == "map[string]float">
-                        Map<String, Float> map${field.name} = new HashMap<>();
-                        var pairs${field.name} = span.split(";");
-                        for (var pair : pairs${field.name}) {
-                            var array = pair.split(":");
-                            map${field.name}.put(array[0], Float.parseFloat(array[1]));
-                        }
-                        model.set${field.name}(map${field.name});
+                    <#else>
+                        *** wrong field.type ***
                     </#if>
                         break;
                     </#list>
@@ -103,7 +81,7 @@ public class ${model.name}MongoDao extends MongoDao<${model.name}, ${model.name}
     public void link(String link, List<${model.name}> list) {
         switch (link) {
             <#list model.fields as field><#if field.link??>
-            case "${u(field.name)}":
+            case "${c(field.name)}":
                 list = link${field.name}(list);
                 break;
             </#if></#list>

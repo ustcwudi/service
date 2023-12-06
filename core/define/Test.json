@@ -59,14 +59,9 @@
     {
       "name": "TestIntList",
       "type": "int[]",
-      "description": "整数组",
+      "description": "整数数组",
       "search": "equal",
-      "show": true,
-      "map": {
-        "未知": "0",
-        "男性": "1",
-        "女性": "2"
-      }
+      "show": true
     },
     {
       "name": "TestFloatList",
@@ -83,25 +78,28 @@
       "show": true
     },
     {
-      "name": "TestIntMap",
-      "type": "map[string]int",
-      "description": "整数键值对",
+      "name": "TestStringSelectList",
+      "type": "string[]",
+      "description": "字符串选择数组",
       "search": "equal",
-      "show": true
+      "show": true,
+      "map": {
+        "未知": "0",
+        "男性": "1",
+        "女性": "2"
+      }
     },
     {
-      "name": "TestFloatMap",
-      "type": "map[string]float",
-      "description": "浮点键值对",
+      "name": "TestIntSelectList",
+      "type": "int[]",
+      "description": "整数选择数组",
       "search": "equal",
-      "show": true
-    },
-    {
-      "name": "TestStringMap",
-      "type": "map[string]string",
-      "description": "字符串键值对",
-      "search": "equal",
-      "show": true
+      "show": true,
+      "map": {
+        "未知": "0",
+        "男性": "1",
+        "女性": "2"
+      }
     }
   ]
 }

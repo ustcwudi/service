@@ -15,6 +15,7 @@ export default (props: Props) => {
 
   return (
     <Autocomplete
+      fullWidth={props.fullWidth}
       defaultValue={defaultValue}
       options={props.map}
       isOptionEqualToValue={(option, value) => option.value === value.value}
